@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 
 // DB config
 const db = require('./config/keys').mongoURI;
-
+//
 // connect to mongodb
 mongoose
   .connect(db)
@@ -37,11 +37,14 @@ mongoose
 // Passport middleware
 app.use(passport.initialize());
 // Passport config
-require('./config/passport')(passport)
+//require('./config/passport')(passport);
 
+
+// if the route contians /api/users, route to users.js, etc.
 app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
 
+// set up port
 const port = 8020;
 app.listen(port, () => console.log(`Server running on port ${port}`) );
