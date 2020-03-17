@@ -1,14 +1,16 @@
-const express = require ('express');
-
-// only bring in Router
+// IMPORT libraries
+const express = require('express');
+// import only router portion from express library
 const router = express.Router();
+const User = require('../../models/User');
 
-// get json response back
-// just one line, don't need return statement
-// @route     GET api/user/test
-// @desc      Tests user route
+// @route     POST api/user/register
+// @desc      REGISTER user 
 // @access    Public
-router.get('/test', (req, res) => res.json({msg: 'Users works!'}));
 
-// export so other js file can use this
+router.post('/register', (req, res) => {
+  
+})
+
+// export router
 module.exports = router;
