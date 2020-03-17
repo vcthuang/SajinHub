@@ -24,7 +24,7 @@ const userSchema = new Schema({
     required: false
   },
   date: {
-    type: date,
+    type: Date,
     defalut: Date.now
   }
 });
