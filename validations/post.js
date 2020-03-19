@@ -10,7 +10,7 @@ module.exports = validatePostInput = data => {
   data.text = (!isEmpty(data.text)) ? data.text : '';
   data.image = (!isEmpty(data.image)) ? data.image : '';
 
-  // let's validate the required field: [text]
+  // let's validate the required field: [text, image]
   if (!Validator.isLength(data.text, { min: 10, max: 200 })) {
     errors.text = 'Text must be between 10 and 200 characters'
   }

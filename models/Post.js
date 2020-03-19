@@ -26,6 +26,7 @@ const postSchema = new Schema({
     type: String,
   },
   likes: [
+    // each like will be stored in the likes array
     {
       user: {
         type: Schema.Types.ObjectId,
@@ -40,6 +41,7 @@ const postSchema = new Schema({
     } 
   ],
   comments: [
+    // each comment will be stored in the comments array
     {
       users: {
         type: Schema.Types.ObjectId,

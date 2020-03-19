@@ -45,7 +45,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
-    // validation
+    // validate required fields
     const { errors, isValid } = validatePostInput(req.body);
 
     if (!isValid) {
@@ -62,7 +62,7 @@ router.post(
       avatar: req.user.avatar
     });
 
-    // SAVE the new post
+    // save the new post
     newPost.save()
     .then(post => res.json(post))
     .catch(err => res.json(err));
@@ -129,7 +129,7 @@ router.post(
 );
 
 
-// @route POST api/posts/like/:id  
+// @route POST api/posts/dislike/:id  
 // @desc DISLIKE a post by Post _id
 // @access Private
 router.post(
@@ -145,7 +145,7 @@ router.post(
         return res.status(400).json({ like: 'You have not liked this post' });
       }
 
-      // the user already liked, now the like will be removed
+      // the user has already liked, now the like will be removed
       const removeIndex = 
       post.likes
       .map(like => like.user.toString())
@@ -171,7 +171,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
-    // validation
+    // validate required field
     const { errors, isValid } = validateCommentInput(req.body);
 
     if (!isValid) {
@@ -194,6 +194,7 @@ router.post(
         // add "newComment" to the comments array
         post.comments.unshift(newComment);
 
+        // save the updated post
         post.save()
         .then(post => res.json(post))
         .then(err => res.json(err));
@@ -211,11 +212,12 @@ router.delete(
   '/comment/:id/:comment_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-
+    
+    // first, find the post (the first params will be used :id)
     Post.findById(req.params.id)
     .then(post => {
 
-      // check if the user has already commented on the post
+      // check if the user has already commented on the post (the second params will be used :comment_id)
       if (post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
       return res.status(404).json({ comment: 'You have not commented' });
       }
