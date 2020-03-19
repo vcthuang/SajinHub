@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');         // encrypting password
 const jwt = require('jsonwebtoken');        // creating json web token
 const keys = require('../../config/keys');  // key is needed for creating jwt
 const User = require('../../models/User');  // User model
+const passport = require('passport')        // authentication
 
 // VALIDATORS
 const validateRegisterInput = require('../../validations/register');  
@@ -49,7 +50,7 @@ router.post('/register', (req, res) => {
           avatar
       });
 
-      // auto-generated salt and hash
+      // auto-generate salt and hash
       bcrypt.hash(newUser.password, 10)
       .then(hash => {
         newUser.password = hash;
@@ -114,6 +115,21 @@ router.post('/login', (req, res) => {
   })
   .catch(() => res.status(404).json({ email: 'Email not found!' }));
 });
+
+// @route   GET api/users/current 
+// @desc    GET current user info
+// @access  Private 
+router.get(
+  '/current',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    })
+  }
+);
 
 // export router 
 module.exports = router;
