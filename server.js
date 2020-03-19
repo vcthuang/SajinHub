@@ -1,22 +1,18 @@
-// Include import libraries to be used
-// express for routing
-const express = require('express');
+// BEGIN Import libraries
+//
+const express = require('express');         // express for routing
+const mongoose = require('mongoose');       // MongoDB for database
+const bodyParser = require('body-parser');  // bodyPaser for parsing html
+const passport = require('passport');       // passport for token authentication
 
-// express for database
-const mongoose = require('mongoose');
-
-// bodyPaser for parsing html
-const bodyParser = require('body-parser');
-
-// passport for token authentication
-const passport = require('passport');
-
-// Include our own files 
-const users = require('./routes/api/users');
+const users = require('./routes/api/users');      // Include our own files 
 const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
+//
+// END Import libraries
 
-// start with initialization
+// START initialization
+//
 // create an instance of our app
 const app = express();
 
@@ -36,8 +32,8 @@ mongoose
 
 // Passport middleware
 app.use(passport.initialize());
-// Passport config
-//require('./config/passport')(passport);
+// grab passport from config
+require('./config/passport')(passport);
 
 
 // if the route contians /api/users, route to users.js, etc.
@@ -48,3 +44,5 @@ app.use('/api/posts', posts);
 // set up port
 const port = 8030;
 app.listen(port, () => console.log(`Server running on port ${port}`) );
+//
+// END initialization
