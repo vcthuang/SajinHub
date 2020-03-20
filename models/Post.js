@@ -43,7 +43,7 @@ const postSchema = new Schema({
   comments: [
     // each comment will be stored in the comments array
     {
-      users: {
+      user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
       },
@@ -60,7 +60,51 @@ const postSchema = new Schema({
       date: {
         type: Date,
         default: Date.now
-      }
+      },
+      comments: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: 'users'
+          },
+          text: {
+            type: String,
+            required: true
+          },
+          name: {
+            type: String,
+          },
+          avatar: {
+            type: String,
+          },
+          date: {
+            type: Date,
+            default: Date.now
+          },
+          comments: [
+            {
+              user: {
+                type: Schema.Types.ObjectId,
+                ref: 'users'
+              },
+              text: {
+                type: String,
+                required: true
+              },
+              name: {
+                type: String,
+              },
+              avatar: {
+                type: String,
+              },
+              date: {
+                type: Date,
+                default: Date.now
+              }
+            }
+          ]
+        },
+      ]
     } 
   ],
   date: {
