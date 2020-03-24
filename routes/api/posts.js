@@ -3,7 +3,7 @@ Get/Create/Edit/Delete "post"
 1. GET api/posts   - GET ALL "posts"
 2. GET api/posts/:id   - GET A "post" 
 3. POST api/posts   - CREATE a new "post"
-4. POST api/posts/edit/:id   - EDIT a "post" 
+4. POST api/posts/:id   - EDIT a "post" 
 5. DELETE api/posts/:id   - DELETE a "post" 
 
 Like/Dislike "post"
@@ -14,7 +14,7 @@ Create/Delete/Reply "comment"
 8. POST api/posts/comment/:id   - CREATE a "comment" 
 9. POST api/posts/comment/:id/:comment_id   - REPLY to a "comment"
 10. DELETE api/posts/comment/:id/:comment_id   - DELETE a "comment"
-11. DELETE api/posts/comment/:id/:comment_id/:replycomment_id   - DELETE reply on a "comment"
+11. DELETE api/posts/comment/:id/:comment_id/:replytocomment_id   - DELETE reply on a "comment"
 */
 
 
@@ -90,11 +90,11 @@ router.post(
 );
 
 
-// @route POST api/posts/edit/:id 
+// @route POST api/posts/:id 
 // @desc EDIT a post by Post _id
 // @access Priavte
 router.post(
-  '/edit/:id',
+  '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 

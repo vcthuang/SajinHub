@@ -26,7 +26,7 @@ const postSchema = new Schema({
     type: String,
   },
   likes: [
-    // each like will be stored in the likes array
+    // each like object will be stored in the likes array
     {
       user: {
         type: Schema.Types.ObjectId,
@@ -41,7 +41,7 @@ const postSchema = new Schema({
     } 
   ],
   comments: [
-    // each comment will be stored in the comments array
+    // each comment object will be stored in the comments array
     {
       user: {
         type: Schema.Types.ObjectId,
@@ -61,7 +61,7 @@ const postSchema = new Schema({
         type: Date,
         default: Date.now
       },
-      // each reply will be stored in the replies array
+      // each reply object will be stored in the replies array
       replies: [
         {
           user: {
@@ -81,8 +81,8 @@ const postSchema = new Schema({
           date: {
             type: Date,
             default: Date.now
-          },
-        },
+          }
+        }
       ]
     } 
   ],
