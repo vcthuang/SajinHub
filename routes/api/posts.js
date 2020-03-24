@@ -1,3 +1,23 @@
+/*
+Get/Create/Edit/Delete "post"
+1. GET api/posts   - GET ALL "posts"
+2. GET api/posts/:id   - GET A "post" 
+3. POST api/posts   - CREATE a new "post"
+4. POST api/posts/edit/:id   - EDIT a "post" 
+5. DELETE api/posts/:id   - DELETE a "post" 
+
+Like/Dislike "post"
+6. POST api/posts/like/:id   - LIKE a "post" 
+7. POST api/posts/dislike/:id   - DISLIKE a "post" 
+
+Create/Delete/Reply "comment"
+8. POST api/posts/comment/:id   - CREATE a "comment" 
+9. POST api/posts/comment/:id/:comment_id   - REPLY to a "comment"
+10. DELETE api/posts/comment/:id/:comment_id   - DELETE a "comment"
+11. DELETE api/posts/comment/:id/:comment_id/:replycomment_id   - DELETE reply on a "comment"
+*/
+
+
 // IMPORT libraries
 const express = require('express');         // routing
 const router = express.Router();            // import only router portion from express library
@@ -17,7 +37,7 @@ router.get('/', (req, res) => {
   Post.find()
   .sort({ date: -1 })
   .then(posts => res.json(posts))
-    .catch(() => res.status(404).json({ post: 'No posts found' }));
+  .catch(() => res.status(404).json({ post: 'No posts found' }));
 });
 
 
@@ -70,8 +90,8 @@ router.post(
 );
 
 
-// @route POST api/posts/:id 
-// @desc EDIT a post by post _id
+// @route POST api/posts/edit/:id 
+// @desc EDIT a post by Post _id
 // @access Priavte
 router.post(
   '/edit/:id',
@@ -86,11 +106,11 @@ router.post(
     }
 
     // passed validation
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
       if (!post) {
-        return res.status(404).json({ post: 'Post not found'});
+        return res.status(404).json({ post: 'Post not found' });
       }
 
       // Edit the post content
@@ -112,7 +132,7 @@ router.post(
       .catch(err => res.json(err));
 
     })
-    .catch(err => res.json(err));
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
@@ -125,7 +145,7 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
 
@@ -153,7 +173,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id) 
     .then(post => {
 
@@ -187,7 +207,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
 
@@ -230,12 +250,12 @@ router.post(
     }
 
     // passed validation
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
       if (post) {
 
-        // add a new comment
+        // add a new COMMENT
         const newComment = {
           user: req.user.id,
           text: req.body.text,
@@ -273,18 +293,21 @@ router.post(
     }
 
     // passed validation
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
 
-      // second, find the comment
-      if (post.comments.find(comment => comment._id.toString() === req.params.comment_id)) {
+      // second, find the COMMENT (store the found "comment object" in findComment variable)
+      const findComment = post.comments.find(comment => comment._id.toString() === req.params.comment_id)
+      if (findComment) {
       
-        // store the found "comment object" in comment1 variable
-        const comment1 = post.comments.find(comment => comment._id.toString() === req.params.comment_id)
-
-        // add the user's reply to the comment1's comments array
-        comment1.comments.unshift({ user: req.user.id, text: req.body.text });
+        // add the user's reply to the findComment's replies array
+        findComment.replies.unshift({ 
+          user: req.user.id, 
+          text: req.body.text,
+          name: req.user.name,
+          avatar: req.user.avatar
+         });
 
         // save the updated post
         post.save()
@@ -292,50 +315,6 @@ router.post(
       }
     })
     .catch(err => res.json(err));
-  }
-);
-
-
-// @route POST api/posts/comment/:id/:comment1_id/:comment2_id
-// @desc "REPLY" to a reply on the comment 
-// @access Private
-router.post(
-  '/comment/:id/:comment1_id/:comment2_id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-
-    // validate required field
-    const { errors, isValid } = validateCommentInput(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    // passed validation
-    // first, find the post
-    Post.findById(req.params.id)
-      .then(post => {
-
-        // second, find comment1
-        const comment1 = post.comments.find(comment => comment._id.toString() === req.params.comment1_id);
-
-        if (comment1) {
-
-          // third, find comment2 (which is the user's reply)
-          const comment2 = comment1.comments.find(comment => comment._id.toString() === req.params.comment2_id)
-          
-          if (comment2) {
-
-            // add comment to the comment2's array
-            comment2.comments.unshift({ user: req.user.id, text: req.body.text });
-
-            post.save()
-              .then(post => res.json(post))
-              .catch(err => res.json(err))
-          } 
-        }
-      })
-      .catch(err => res.json(err));
   }
 );
 
@@ -348,11 +327,11 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     
-    // first, find the post (the first params will be used :id)
+    // first, find the POST (:id)
     Post.findById(req.params.id)
     .then(post => {
 
-      // second, check if the user has already commented on the post (the second params will be used :comment_id)
+      // second, check if the user has already commented on the post (:comment_id)
       if (post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
       return res.status(404).json({ comment: 'You have not commented' });
       }
@@ -376,26 +355,26 @@ router.delete(
 );
 
 
-// @route DELETE api/posts/comment/:id/:comment_id  
+// @route DELETE api/posts/comment/:id/:comment_id/:replytocomment_id
 // @desc DELETE "REPLY" on a comment 
 // @access Private
 router.delete(
-  '/comment/:id/:comment_id/:replycomment_id',
+  '/comment/:id/:comment_id/:replytocomment_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
 
-    // first, find the post
+    // first, find the POST
     Post.findById(req.params.id)
     .then(post => {
 
-      // second, find comment1
-      const comment1 = post.comments.find(comment => comment._id.toString() === req.params.comment_id)
-      if (comment1) {
+      // second, find the COMMENT (store the found "comment object" in findComment variable)
+      const findComment = post.comments.find(comment => comment._id.toString() === req.params.comment_id)
+      if (findComment) {
         
-        // then remove "REPLY" from comment1's array
-        const removeIndex = comment1.comments.map(comment => comment._id.toString()).indexOf(req.params.replycomment_id)
+        // then remove "REPLY" from replies's array
+        const removeIndex = findComment.replies.map(reply => reply._id.toString()).indexOf(req.params.replytocomment_id)
 
-        comment1.comments.splice(removeIndex, 1);
+        findComment.replies.splice(removeIndex, 1);
 
         post.save()
         .then(post => res.json(post))
@@ -403,42 +382,6 @@ router.delete(
       }
     })
     .catch(err => res.json(err))
-  }
-);
-
-
-// @route DELETE api/posts/comment/:id/:comment_id  
-// @desc DELETE "REPLY" to reply on a comment
-// @access Private
-router.delete(
-  '/comment/:id/:comment_id/:comment2_id/:comment3_id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-
-    // find the post
-    Post.findById(req.params.id)
-      .then(post => {
-
-        // 1) find comment1
-        const comment1 = post.comments.find(comment => comment._id.toString() === req.params.comment_id)
-        if (comment1) {
-
-          // 2) find comment2
-          const comment2 = comment1.comments.find(comment => comment._id.toString() === req.params.comment2_id)
-          if (comment2) {
-
-            // 3) remove comment3 from the comment2's array
-            const removeIndex = comment2.comments.map(comment => comment._id.toString()).indexOf(req.params.comment3_id)
-
-            comment2.comments.splice(removeIndex, 1);
-
-            post.save()
-              .then(post => res.json(post))
-              .catch(err => res.json(err))
-            }
-          }
-      })
-      .catch(err => res.json(err))
   }
 );
 

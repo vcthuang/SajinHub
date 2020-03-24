@@ -61,7 +61,8 @@ const postSchema = new Schema({
         type: Date,
         default: Date.now
       },
-      comments: [
+      // each reply will be stored in the replies array
+      reply: [
         {
           user: {
             type: Schema.Types.ObjectId,
@@ -81,28 +82,6 @@ const postSchema = new Schema({
             type: Date,
             default: Date.now
           },
-          comments: [
-            {
-              user: {
-                type: Schema.Types.ObjectId,
-                ref: 'users'
-              },
-              text: {
-                type: String,
-                required: true
-              },
-              name: {
-                type: String,
-              },
-              avatar: {
-                type: String,
-              },
-              date: {
-                type: Date,
-                default: Date.now
-              }
-            }
-          ]
         },
       ]
     } 

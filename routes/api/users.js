@@ -1,3 +1,9 @@
+/*
+1. POST api/users/register   - Sign up SajinHub
+2. POST api/user/login   - Login Sajinhub
+*/
+
+
 // IMPORT libraries
 const express = require('express');         // routing
 const router = express.Router();            // import only router portion from express library
@@ -6,7 +12,6 @@ const bcrypt = require('bcryptjs');         // encrypting password
 const jwt = require('jsonwebtoken');        // creating json web token
 const keys = require('../../config/keys');  // key is needed for creating jwt
 const User = require('../../models/User');  // User model
-const passport = require('passport')        // authentication
 
 // VALIDATORS
 const validateRegisterInput = require('../../validations/register');  
@@ -26,11 +31,11 @@ router.post('/register', (req, res) => {
   }
 
   // passed validation
-  User.findOne({ email: req.body.email})
+  User.findOne({ email: req.body.email })
   .then(user => {
     if (user) {
       // user already exists in MongoDB
-      return res.status(400).json({ email: 'Email already exist!'})
+      return res.status(400).json({ email: 'Email already exist!' })
     } else {
       // create the new user in MongoDB
 
@@ -63,6 +68,7 @@ router.post('/register', (req, res) => {
   .catch(() => res.status(404).json({ email: 'Email not found' }));
 });
 
+
 // @route     POST api/user/login
 // @desc      LOGIN user 
 // @access    Public
@@ -92,7 +98,7 @@ router.post('/login', (req, res) => {
             avatar: user.avatar
           };
 
-          // create a token, required payload & key
+          // create a token, payload & key are required
           jwt.sign(
             payload,
             keys.secretOrKey,
@@ -115,21 +121,6 @@ router.post('/login', (req, res) => {
   })
   .catch(() => res.status(404).json({ email: 'Email not found!' }));
 });
-
-// @route   GET api/users/current 
-// @desc    GET current user info
-// @access  Private 
-router.get(
-  '/current',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.json({
-      id: req.user.id,
-      name: req.user.name,
-      email: req.user.email
-    })
-  }
-);
 
 // export router 
 module.exports = router;
