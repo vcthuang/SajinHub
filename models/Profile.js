@@ -43,7 +43,7 @@ const profileSchema = new Schema({
     default: Date.now
   },
 
-  friends: [                            // people that ther user is following or subscribed to
+  following: [                            // people that ther user is following or subscribed to
     {
       user: {                         
         type: Schema.Types.ObjectId,
