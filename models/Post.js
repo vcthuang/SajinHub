@@ -62,7 +62,7 @@ const postSchema = new Schema({
         default: Date.now
       },
       // each reply will be stored in the replies array
-      reply: [
+      replies: [
         {
           user: {
             type: Schema.Types.ObjectId,

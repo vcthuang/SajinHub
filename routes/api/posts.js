@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
   Post.find()
   .sort({ date: -1 })
   .then(posts => res.json(posts))
-  .catch(() => res.status(404).json({ post: 'No posts found' }));
+  .catch(() => res.status(404).json({ post: 'Posts not found' }));
 });
 
 
@@ -50,10 +50,10 @@ router.get('/:id', (req, res) => {
     if (post) {
       return res.json(post);
     } else {
-      return res.status(404).json({ post: 'No post found by this id' });
+      return res.status(404).json({ post: 'Post not found' });
     }
   })
-  .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+  .catch(() => res.status(404).json({ post: 'Post not found' }));
 })
 
 
@@ -160,7 +160,7 @@ router.delete(
       .catch(err => res.json(err));
 
     })
-    .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
@@ -194,7 +194,7 @@ router.post(
       .then(post => res.json(post))
       .catch(err => res.json(err));
     })
-    .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
@@ -229,7 +229,7 @@ router.post(
         .then(post => res.json(post))
         .catch(err => res.json(err));
     })
-    .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
@@ -270,9 +270,11 @@ router.post(
         post.save()
         .then(post => res.json(post))
         .then(err => res.json(err));
-      } 
+      } else {
+        return res.json({ post: 'Post not found' })
+      }
     })
-    .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }  
 );
 
@@ -312,9 +314,11 @@ router.post(
         // save the updated post
         post.save()
         .then(post => res.json(post))
+      } else {
+        return res.status(404).json({ comment: 'Comment not found' });
       }
     })
-    .catch(err => res.json(err));
+    .catch(() => res.json({ post: 'Post not found' }));
   }
 );
 
@@ -350,7 +354,7 @@ router.delete(
       .catch(err => res.json(err));
 
     })
-  .catch(() => res.status(404).json({ post: 'No post found by this id' }));
+  .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
@@ -379,9 +383,11 @@ router.delete(
         post.save()
         .then(post => res.json(post))
         .catch(err => res.json(err))
+      } else {
+        return res.status(404).json({ comment: 'Comment not found' });
       }
     })
-    .catch(err => res.json(err))
+    .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
