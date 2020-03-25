@@ -19,6 +19,12 @@ module.exports = validatePostInput = data => {
     errors.text = 'Text field is required'
   }
 
+  if (!isEmpty(data.image)) {
+    if (!Validator.isURL(data.image)) {
+      errors.image = 'Not a valid URL';
+    }
+  }
+
   if (isEmpty(data.image)) {
     errors.Image = 'Image field is required'
   }
