@@ -1,3 +1,9 @@
+/*
+1. POST api/users/register   - Sign up SajinHub
+2. POST api/user/login   - Login Sajinhub
+*/
+
+
 // IMPORT libraries
 const express = require('express');         // routing
 const router = express.Router();            // import only router portion from express library
@@ -25,11 +31,11 @@ router.post('/register', (req, res) => {
   }
 
   // passed validation
-  User.findOne({ email: req.body.email})
+  User.findOne({ email: req.body.email })
   .then(user => {
     if (user) {
       // user already exists in MongoDB
-      return res.status(400).json({ email: 'Email already exist!'})
+      return res.status(400).json({ email: 'Email already exist!' })
     } else {
       // create the new user in MongoDB
 
@@ -49,7 +55,7 @@ router.post('/register', (req, res) => {
           avatar
       });
 
-      // auto-generated salt and hash
+      // auto-generate salt and hash
       bcrypt.hash(newUser.password, 10)
       .then(hash => {
         newUser.password = hash;
@@ -61,6 +67,7 @@ router.post('/register', (req, res) => {
   })
   .catch(() => res.status(404).json({ email: 'Email not found' }));
 });
+
 
 // @route     POST api/user/login
 // @desc      LOGIN user 
@@ -91,7 +98,7 @@ router.post('/login', (req, res) => {
             avatar: user.avatar
           };
 
-          // create a token, required payload & key
+          // create a token, payload & key are required
           jwt.sign(
             payload,
             keys.secretOrKey,
