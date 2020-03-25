@@ -8,13 +8,12 @@
 // 5.  (Profile Get Handle) GET api/profile/handle/:handle
 // 6.  (Profile Get User)   GET api/profile/user/:id
 //
-// Friends management:
-// 7.  GET api/profile/friends
-// 8.  POST api/profile/friends
-// 9.  DELETE api/profile/friends/:id 
+// Following/Friends management:
+// 7.  (Profile Post Following)     POST api/profile/followings/:id 
+// 8.  (Profile Delete Following)   DELETE api/profile/followings/:id 
 //
-// Subscribers management:
-// 10.  GET api/profile/Subscribers
+// Followers/Subscribers management:
+// 9.  This table/document is updated with #7 & #8
 
 
 // BEGIN Import libraries
@@ -190,6 +189,86 @@ router.get(
         
         // Place profile in response
         res.json (profile);
+      })
+      .catch (err=>res.status(404).json(err));
+  }
+);
+
+// @route     Post api/profile/followings/:user_id
+// @desc      Add following/friend to profile
+// @access    Private
+router.post(
+  '/followings/:user_id',
+  passport.authenticate('jwt', {session: false}),
+  (req, res) => {
+    Profile.findOne ({user: req.user.id})
+      .then( profile => {
+        if (!profile)
+          return res.status(400).json({noprofile: 'Please create profile before adding followings'});
+
+        // make sure the user can only do like once
+        if ( profile.followings.filter(following => following._id.toString() === req.params.user_id).length >0 ) {
+          return res
+            .status(400)
+            .json({ alreadyfollowing: 'User is already following'});
+        }
+
+        // Add user_id to following array for current profile user
+        profile.followings.unshift(req.params.user_id);
+        // Write to MongoDB
+        profile.save().then (profile => res.json(profile));
+
+        // Update followers/subscriber array in req.params.user_id's / friend's profile
+        // By this state, we don't expect exception
+        Profile.findOne({user: req.params.user_id})
+          .then (friendprofile => {
+            friendprofile.followers.unshift(req.user.id);
+            friendprofile.save().then (friendprofile => res.json(friendprofile));
+          })
+          .catch (err=>res.status(404).json(err));
+      })
+      .catch (err=>res.status(404).json(err)); 
+  }
+);
+
+// @route     DELETE api/profile/followings/:user_id
+// @desc      Delete following/friend to profile
+// @access    Private
+router.delete(
+  '/followings/:user_id',
+  passport.authenticate('jwt', {session: false}),
+  (req, res) => {
+    Profile.findOne ({user: req.user.id})
+      .then( profile => {
+        if (profile) {
+          const removeIndex = profile.followings
+            .map (following => following._id)
+            .indexOf (req.params.user_id);
+          
+          if (removeIndex === -1)  // Not found
+            return res.status(400).json({followingnotfound: 'following not found'});
+
+          // splice out of array
+          profile.followings.splice (removeIndex, 1);
+          profile.save().then (profile => res.json(profile));
+
+          // Update followers/subscriber array in req.params.user_id's / friend's profile
+          // By this state, we don't expect exception
+          Profile.findOne({user: req.params.user_id})
+          .then (friendprofile => {
+            const removeIndex1 = profile.followers
+              .map (follower => follower._id)
+              .indexOf (req.user.id);
+
+            friendprofile.followers.splice(removeIndex1, 1);
+            friendprofile.save().then (friendprofile => res.json(friendprofile));
+          })
+          .catch (err=>res.status(404).json(err));
+
+        } else {
+          // The code should have never came to this place
+          return res.status(400).json({noprofile: 'Please create profile before deleting followings'});
+        }
       })
       .catch (err=>res.status(404).json(err));
   }
