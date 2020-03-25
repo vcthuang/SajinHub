@@ -44,7 +44,7 @@ router.post('/register', (req, res) => {
         {
           s: '200',   // size
           r: 'pg',    // appropriate file
-          d: 'retro'  // defalut avatar image
+          d: 'retro'  // default avatar image
         }, true       // secured url
       );
 
