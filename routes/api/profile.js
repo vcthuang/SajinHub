@@ -98,7 +98,7 @@ router.delete(
           // Delete user from users document in MongoDB
           User.findOneAndRemove({_id: req.user.id})
             .then (()=>res.json({success: true}))
-            .catch (err => console.log(err));
+            .catch (err=>res.status(404).json(err));
         } else {
           return res.status(400).json ({noprofile: 'User has no profile'});
         }
