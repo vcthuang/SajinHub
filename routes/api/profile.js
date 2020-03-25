@@ -203,26 +203,36 @@ router.post(
   (req, res) => {
     Profile.findOne ({user: req.user.id})
       .then( profile => {
+        // Rule 1:  User have to have a profile before following
         if (!profile)
           return res.status(400).json({noprofile: 'Please create profile before adding followings'});
 
-        // make sure the user can only do like once
-        if ( profile.followings.filter(following => following._id.toString() === req.params.user_id).length >0 ) {
+        // Rule 2:  User can't follow him/herself
+        if (req.user.id === req.params.user_id)
+          return res.status(400).json({followsomeoneelse: 'Please find a friend, not yourself to follow'});
+
+        // Rule 3:  User should only follow another user once
+        if ( profile.followings.filter(following => following.user.toString() === req.params.user_id).length >0 ) {
           return res
             .status(400)
             .json({ alreadyfollowing: 'User is already following'});
         }
 
-        // Add user_id to following array for current profile user
-        profile.followings.unshift(req.params.user_id);
-        // Write to MongoDB
-        profile.save().then (profile => res.json(profile));
-
-        // Update followers/subscriber array in req.params.user_id's / friend's profile
-        // By this state, we don't expect exception
+        // First make sure the following (friend) has a profile
         Profile.findOne({user: req.params.user_id})
           .then (friendprofile => {
-            friendprofile.followers.unshift(req.user.id);
+            // Rule 4:  User needs a profile before anyone can follow
+            if (!friendprofile)
+              return res.status(400).json({noprofile: 'Your friend needs a profile before you can follow'});
+            
+            // All rules are followed, user can officially has a following (friend)
+            // Add req.params.user_id (friend) to followings array of req.user_id (current user)
+            profile.followings.unshift ({user: req.params.user_id});
+            // Write to MongoDB
+            profile.save().then (profile => res.json(profile));
+
+            // Add req.user_id (current user) to followers array of req.params.user_id (friend)
+            friendprofile.followers.unshift ({user: req.user.id});
             friendprofile.save().then (friendprofile => res.json(friendprofile));
           })
           .catch (err=>res.status(404).json(err));
@@ -242,13 +252,14 @@ router.delete(
       .then( profile => {
         if (profile) {
           const removeIndex = profile.followings
-            .map (following => following._id)
+            .map (following => following.user.toString())
             .indexOf (req.params.user_id);
           
-          if (removeIndex === -1)  // Not found
+          // friend/follwing not found
+          if (removeIndex === -1)  
             return res.status(400).json({followingnotfound: 'following not found'});
 
-          // splice out of array
+          // splice friend/follwing out of followings array
           profile.followings.splice (removeIndex, 1);
           profile.save().then (profile => res.json(profile));
 
@@ -257,7 +268,7 @@ router.delete(
           Profile.findOne({user: req.params.user_id})
           .then (friendprofile => {
             const removeIndex1 = profile.followers
-              .map (follower => follower._id)
+              .map (follower => follower.user.toString())
               .indexOf (req.user.id);
 
             friendprofile.followers.splice(removeIndex1, 1);
@@ -266,7 +277,6 @@ router.delete(
           .catch (err=>res.status(404).json(err));
 
         } else {
-          // The code should have never came to this place
           return res.status(400).json({noprofile: 'Please create profile before deleting followings'});
         }
       })
