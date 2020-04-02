@@ -1,24 +1,34 @@
 import React from 'react';
 import './App.css';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-
-import Navbar from './components/layout/Navbar';   
+// BEGIN Import libraries
+//
+import { BrowserRouter as Router, Route } from 'react-router-dom';   // Routing
+// import {Provider} from 'react-redux';                              // Redux
+// Our own components
+import Navbar from './components/layout/Navbar';                   // Layout
 import Landing from './components/layout/Landing';
 import Footer from './components/layout/Footer';
-
-import Register from './components/auth/Register'; 
+import Register from './components/auth/Register';                 // Authenticaiton
 import Login from './components/auth/Login';
+//
+// END Import libraries
+
 
 function App() {
   return (
+    // No Redux store yet
+    //<Provider store = {store}>
     <Router>
-      <Navbar />
-      <Route exact path="/" component={ Landing } />
-      <Route exact path='/register' component={ Register } />
-      <Route exact path="/login" component={ Login } />
-      <Footer />
+      <div className="App">
+        <Navbar />
+        <Route exact path='/' component={Landing} />
+        <Route exact path='/register' component={Register} />
+        <Route exact path='/Login' component={Login} />
+        <Footer />
+      </div>
     </Router>
+    //</Provider>
   );
 }
 
