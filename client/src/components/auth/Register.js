@@ -19,12 +19,12 @@ export default class Register extends Component {
   }
 
   // This function pass parameters when there is user input
-  onChange(e) {
+  onChange (e) {
     // Dynamically set key value pair
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState ({[ e.target.name ]: e.target.value});
   }
 
-  onSubmit(e) {
+  onSubmit (e) {
     // Prevent Submit button's default behavior
     e.preventDefault();
 
@@ -37,9 +37,9 @@ export default class Register extends Component {
 
     // Make API call
     axios
-      .post('/api/users/register', newUser)
-      .then(res => console.log(res.data))
-      .catch(err => this.setState({ errors: err.resposne.data }))
+      .post ( '/api/users/register', newUser)
+      .then ( res => console.log (res.data))
+      .catch (err => this.setState ({ errors: err.resposne.data }))
   }
 
   render() {
