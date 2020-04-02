@@ -28,7 +28,7 @@ class Navbar extends Component {
               <Link className = "nav-link" to = '/posts'><i className="fas fa-edit"></i></Link>
               </li>
               <li className = "nav-item">
-              <Link className = "nav-link" to = '/profile/all'><i className="fas fa-heart"></i></Link>
+              <Link className = "nav-link" to = '/profile/user'><i className="fas fa-heart"></i></Link>
               </li>
               <li className = "nav-item">
               <Link className = "nav-link" to = '/profile'><i className="fas fa-address-card"></i></Link>

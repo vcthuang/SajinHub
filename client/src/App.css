@@ -2,3 +2,6 @@
   font-size: 28px;
 }
 
+.navbar-toggler { 
+  border-style: none;
+} 
