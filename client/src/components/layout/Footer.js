@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <div>
-      Hello from Footer
-    </div>
+    <footer className="mt-5 p-4 text-center">
+      Copyright &copy; { new Date().getFullYear() } SajinHub
+    </footer>
   )
 }

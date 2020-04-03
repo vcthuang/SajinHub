@@ -3,7 +3,9 @@ import './App.css';
 
 // BEGIN Import libraries
 //
+
 import {BrowserRouter as Router, Route} from 'react-router-dom';   // Routing
+
 // import {Provider} from 'react-redux';                              // Redux
 // Our own components
 import Navbar from './components/layout/Navbar';                   // Layout
