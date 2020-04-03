@@ -9,6 +9,7 @@
   font-size: 31px;
 }
 .navbar-toggler {
+  border-style: none;
   outline: none !important;
   box-shadow: none !important;
 }
@@ -74,4 +75,31 @@
   max-width: 350px;
   padding: 15px;
   margin: auto;
+}
+
+/* Register */
+.fa-user-plus {
+  font-size: 30px;
+}
+
+.form-register {
+  background-color: none;
+  width: 100%;
+  max-width: 350px;
+  padding: 15px;
+  margin: auto;
+}
+
+.Register-h2 {
+  padding: 17px;
+}
+
+.register-image {
+  background: url('./img/main2.jpeg') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  margin-top: 40px;
+  margin-right: 30px;
+  margin-left: 20px;
 }

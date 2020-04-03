@@ -15,23 +15,27 @@ class Navbar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarNav">
-            {/* Place all the icoons on the right */}
+          <div className="collapse navbar-collapse" id="navbarNav">
+            {/* Place all the icons on the right */}
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link className="nav-link" to='/'><i className="fas fa-house-user nav-icon"></i></Link>
               </li>
+              
               <li className="nav-item">
                 <Link className="nav-link" to='/login'><i className="fas fa-sign-in-alt nav-icon"></i></Link>
               </li>
+              
               <li className="nav-item">
                 <Link className="nav-link" to='/posts'><i className="fas fa-edit nav-icon"></i></Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to='/profile/all'><i className="fas fa-heart nav-icon"></i></Link>
+
+              <li className = "nav-item">
+              <Link className = "nav-link" to = '/profile/user'><i className="fas fa-heart nav-icon"></i></Link>
               </li>
+              
               <li className="nav-item">
-                <Link className="nav-link" to='/profile'><i className="fas fa-address-card nav-icon"></i></Link>
+                <Link className="nav-link" to='/profile'><i className="fas fa-users-cog nav-icon"></i></Link>
               </li>
             </ul>
           </div>
