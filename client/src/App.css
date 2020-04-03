@@ -9,6 +9,7 @@
   font-size: 31px;
 }
 .navbar-toggler {
+  border-style: none;
   outline: none !important;
   box-shadow: none !important;
 }
@@ -53,9 +54,6 @@
   padding-top: 40px;
 }
 
-.navbar-toggler { 
-  border-style: none;
-} 
 .login-h2 {
   padding: 17px;
 }
