@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from 'axios';                // API calls to server
+import classnames from 'classnames';      // Conditional styling in JSX
 
 export default class Register extends Component {
 
   constructor() {
-    super();          // Get parent's property
+    super();          // Get parent's component property
     this.state = {
       name: '',       // These variable names should match server and html
       email: '',
+      avatar: '',
       password: '',
       password2: '',
       errors: {}      // For erros to display on UI
@@ -24,6 +26,7 @@ export default class Register extends Component {
     this.setState ({[ e.target.name ]: e.target.value});
   }
 
+  // This function is triggered when submit button is hit
   onSubmit (e) {
     // Prevent Submit button's default behavior
     e.preventDefault();
@@ -31,7 +34,8 @@ export default class Register extends Component {
     const newUser = {
       name: this.state.name,
       email: this.state.email,
-      passpword: this.state.password,
+      avatar: this.state.avatar,
+      password: this.state.password,
       password2: this.state.password2
     };
 
@@ -39,13 +43,113 @@ export default class Register extends Component {
     axios
       .post ( '/api/users/register', newUser)
       .then ( res => console.log (res.data))
-      .catch (err => this.setState ({ errors: err.resposne.data }))
+      .catch (err => this.setState ({ errors: err.response.data }))
   }
 
   render() {
+
+    const {errors} = this.state;
+
     return (
-      <div>
-        hello from register
+      <div className = "register text-center">
+        <div className = "container">
+          <div className = "row">
+
+            {/* Place a picture on the left */}
+            <div className = "col-md-6 m-auto">
+              {/* hide picture when device is smaller than md */}
+              <div className = "register-image d-none d-md-block "></div>
+            </div>
+
+            {/* Place the register form on the left */}
+            <div className = "col-md-6 m-auto">
+              <form onSubmit = { this.onSubmit } className="form-register">
+                
+                {/* Icon & title */}
+                <i className="fas fa-user-plus"></i>
+                <h2 className = "Register-h2">Register</h2>
+                
+                {/* Name */}
+                <div className = "form-group">
+                  <input 
+                    type="name"
+                    className = { classnames ( "form-control", { "is-invalid":errors.name})}
+                    placeholder = "Name"
+                    value = { this.state.name}
+                    onChange = { this.onChange}
+                    name = "name"
+                    required
+                  />
+                  {errors.name && (
+                    <div className = "invalid-feedback">{errors.name}</div>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div className = "form-group">
+                  <input 
+                    type="email"
+                    className = { classnames ( "form-control", { "is-invalid":errors.email})}
+                    placeholder = "Email"
+                    value = { this.state.email}
+                    onChange = { this.onChange}
+                    name = "email"
+                    required
+                  />
+                  {errors.email && (
+                    <div className = "invalid-feedback">{errors.email}</div>
+                  )}
+                </div>
+
+                 {/* Avatar */}
+                 <div className = "form-group">
+                  <input 
+                    type="avatar"
+                    className = { classnames ( "form-control", { "is-invalid":errors.avatar})}
+                    placeholder = "Avatar"
+                    value = { this.state.avatar}
+                    onChange = { this.onChange}
+                    name = "avatar"
+                  />
+                  {errors.avatar && (
+                    <div className = "invalid-feedback">{errors.avatar}</div>
+                  )}
+                </div>
+
+                 {/* Password */}
+                 <div className = "form-group">
+                  <input 
+                    type="password"
+                    className = { classnames ( "form-control", { "is-invalid":errors.password})}
+                    placeholder = "Password"
+                    value = { this.state.password}
+                    onChange = { this.onChange}
+                    name = "password"
+                  />
+                  {errors.password && (
+                    <div className = "invalid-feedback">{errors.password}</div>
+                  )}
+                </div>
+
+                 {/* Confirm Password */}
+                 <div className = "form-group">
+                  <input 
+                    type="password"
+                    className = { classnames ( "form-control", { "is-invalid":errors.password2})}
+                    placeholder = "Confirm Password"
+                    value = { this.state.password2}
+                    onChange = { this.onChange}
+                    name = "password2"
+                  />
+                  {errors.password2 && (
+                    <div className = "invalid-feedback">{errors.password2}</div>
+                  )}
+                </div>
+                <button className="btn btn-dark btn-block" type="submit">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
