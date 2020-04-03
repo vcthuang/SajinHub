@@ -9,7 +9,6 @@ export default class Register extends Component {
     this.state = {
       name: '',       // These variable names should match server and html
       email: '',
-      avatar: '',
       password: '',
       password2: '',
       errors: {}      // For erros to display on UI
@@ -34,7 +33,6 @@ export default class Register extends Component {
     const newUser = {
       name: this.state.name,
       email: this.state.email,
-      avatar: this.state.avatar,
       password: this.state.password,
       password2: this.state.password2
     };
@@ -98,21 +96,6 @@ export default class Register extends Component {
                   />
                   {errors.email && (
                     <div className = "invalid-feedback">{errors.email}</div>
-                  )}
-                </div>
-
-                 {/* Avatar */}
-                 <div className = "form-group">
-                  <input 
-                    type="avatar"
-                    className = { classnames ( "form-control", { "is-invalid":errors.avatar})}
-                    placeholder = "Avatar"
-                    value = { this.state.avatar}
-                    onChange = { this.onChange}
-                    name = "avatar"
-                  />
-                  {errors.avatar && (
-                    <div className = "invalid-feedback">{errors.avatar}</div>
                   )}
                 </div>
 
