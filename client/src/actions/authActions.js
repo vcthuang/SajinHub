@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER } from './types';
+import { SET_CURRENT_USER, SET_ERRORS } from './types';
 import axios from 'axios';
 
 // when the user clicks submit button on the registration page, registerUser ACTION gets triggered
