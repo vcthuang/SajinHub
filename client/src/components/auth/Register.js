@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';                // API calls to server
 import classnames from 'classnames';      // Conditional styling in JSX
 
-export default class Register extends Component {
+class Register extends Component {
 
   constructor() {
     super();          // Get parent's component property
@@ -37,11 +37,7 @@ export default class Register extends Component {
       password2: this.state.password2
     };
 
-    // Make API call
-    axios
-      .post ( '/api/users/register', newUser)
-      .then ( res => console.log (res.data))
-      .catch (err => this.setState ({ errors: err.response.data }))
+
   }
 
   render() {
@@ -137,3 +133,5 @@ export default class Register extends Component {
     )
   }
 }
+
+export default Register;
