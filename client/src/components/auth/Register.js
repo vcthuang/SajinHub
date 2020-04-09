@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
-import axios from 'axios';                // API calls to server
-import classnames from 'classnames';      // Conditional styling in JSX
 
-export default class Register extends Component {
+// Conditional styling in JSX
+import classnames from 'classnames'; 
+
+// Redux Action
+import { registerUser } from '../../actions/authActions';
+
+// Pipe data from Redux store through UI (to Action)
+import { connect } from 'react-redux';
+
+// Safeguarding measure - Redux has to be running when Register component is called
+import PropTypes from 'prop-types';
+
+class Register extends Component {
 
   constructor() {
     super();          // Get parent's component property
@@ -37,16 +47,21 @@ export default class Register extends Component {
       password2: this.state.password2
     };
 
-    // Make API call
-    axios
-      .post ( '/api/users/register', newUser)
-      .then ( res => console.log (res.data))
-      .catch (err => this.setState ({ errors: err.response.data }))
+    // Call Redux Action and utilize built in props history
+    this.props.registerUser (newUser, this.props.history);
+  }
+
+  // Changes in Redux Store will reflect here 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.errors) {
+      this.setState ({errors: nextProps.errors});
+    }
   }
 
   render() {
-
-    const {errors} = this.state;
+    // errors are updated via componentWillReceiveProps
+    const { errors } = this.state;
+    const { user } = this.props.auth;
 
     return (
       <div className = "register text-center">
@@ -78,6 +93,7 @@ export default class Register extends Component {
                     name = "name"
                     required
                   />
+                  {/* Bootstrap invalid-feedback - put font red & small */} 
                   {errors.name && (
                     <div className = "invalid-feedback">{errors.name}</div>
                   )}
@@ -137,3 +153,16 @@ export default class Register extends Component {
     )
   }
 }
+
+// Create safety net as this component has dependencies
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,    // Redux Action
+  errorReducer: PropTypes.object.isRequired,    // Redux Store return object
+}
+
+// Read state data and place it in props
+const mapStateToProps = (state) => ({
+  errors: state.errorReducer
+});
+
+export default connect (mapStateToProps, {registerUser}) (Register);
