@@ -162,7 +162,7 @@ Register.propTypes = {
 
 // Read state data and place it in props
 const mapStateToProps = (state) => ({
-  errors: state.errors
+  errors: state.errorReducer
 });
 
 export default connect (mapStateToProps, {registerUser}) (Register);
