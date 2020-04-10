@@ -61,7 +61,6 @@ class Register extends Component {
   render() {
     // errors are updated via componentWillReceiveProps
     const { errors } = this.state;
-    const { user } = this.props.auth;
 
     return (
       <div className = "register text-center">
@@ -157,12 +156,12 @@ class Register extends Component {
 // Create safety net as this component has dependencies
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,    // Redux Action
-  errorReducer: PropTypes.object.isRequired,    // Redux Store return object
+  errors: PropTypes.object.isRequired,    // Redux Store return object
 }
 
 // Read state data and place it in props
 const mapStateToProps = (state) => ({
-  errors: state.errorReducer
+  errors: state.errors
 });
 
 export default connect (mapStateToProps, {registerUser}) (Register);
