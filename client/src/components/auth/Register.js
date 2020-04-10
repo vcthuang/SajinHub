@@ -61,7 +61,6 @@ class Register extends Component {
   render() {
     // errors are updated via componentWillReceiveProps
     const { errors } = this.state;
-    const { user } = this.props.auth;
 
     return (
       <div className = "register text-center">
