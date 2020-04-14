@@ -1,5 +1,5 @@
 // SET or DELETE token from Authorization header
-import axios from axios;
+import axios from 'axios';
 
 
 export default function setAuthToken(token) {
