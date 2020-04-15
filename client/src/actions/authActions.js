@@ -54,3 +54,7 @@ export const loginUser = userData => dispatch => {
     })
   );
 };
+
+export const logoutUser = () => {
+  
+};
