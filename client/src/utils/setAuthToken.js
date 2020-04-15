@@ -1,7 +1,6 @@
 // SET or DELETE token from Authorization header
 import axios from 'axios';
 
-
 export default function setAuthToken(token) {
   // token will be attached on Authorization header for every axios request
   if (token) {
