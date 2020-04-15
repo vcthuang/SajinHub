@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode';
 // Interact with server
 import axios from 'axios';
 
-// when the user clicks submit button on the registration page, registerUser ACTION gets triggered
+// when the user clicks submit button on the registration page, registerUser gets triggered
 export const registerUser = (userData, history) => dispatch => {
   
   // Make API call
@@ -26,21 +26,24 @@ export const registerUser = (userData, history) => dispatch => {
   );
 };
 
-// when the user clicks login button on the login page, loginUser ACTION gets triggered
+// when the user clicks login button on the login page, loginUser gets triggered
 export const loginUser = userData => dispatch => {
   axios
   .post('/api/users/login', userData)
   .then(res => {
     // upon login, get the token
     const token = res.data.token;
-    // save token in the local storage(browser)
 
-    // set token on Authorization Header
+    // 1. save the token in the localStorage(browser)
+    localStorage.setItem('jwtToken', token);
+
+    // 2. set the token on the Authorization Header for every axios request
     setAuthToken(token);
 
-    // decrypt token
+    // 3. decrypt the token and get user info (id, name, avatar, iat, exp)
     const decoded = jwt_decode(token);
-    // make a dispatch call 
+
+    // 4. make a dispatch call to save user info(decoded) in Redux store
     dispatch({
       type: SET_CURRENT_USER,
       payload: decoded
@@ -55,6 +58,17 @@ export const loginUser = userData => dispatch => {
   );
 };
 
-export const logoutUser = () => {
-  
+// 1) when the user clicks logout button 2) when the browser session has expired, logoutUser gets triggered
+export const logoutUser = () => dispatch => {
+  // 1. empty out localStorage
+  localStorage.removeItem('jwtToken');
+
+  // 2. detach the token from the Authentication Header
+  setAuthToken(false);
+
+  // 3. make a dipatch call to remove user info from Redux store
+  dispatch({
+    type: SET_CURRENT_USER,
+    payload: {}
+  })
 };
