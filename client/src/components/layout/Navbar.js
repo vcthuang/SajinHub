@@ -108,7 +108,7 @@ class Navbar extends Component {
             {/* Display user profiles */}
             <ul className="navbar-nav mr-auto">
               <li className = "nav-item">
-                <Link className = "nav-link" to = '/profile/all'>
+                <Link className = "nav-link" to = '/profiles'>
                   <i className="fas fa-users nav-icon" title = "profiles"></i>
                 </Link>
               </li>
