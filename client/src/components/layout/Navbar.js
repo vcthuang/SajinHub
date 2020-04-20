@@ -27,21 +27,21 @@ class Navbar extends Component {
         {/* Home icon */}
         <li className="nav-item">
           <Link className="nav-link" to='/'>
-            <i className="fas fa-house-user nav-icon"></i>
+            <i className="fas fa-house-user nav-icon" title = "home"></i>
           </Link>
         </li>
       
         {/* Reigster icon */}
         <li className="nav-item">
           <Link className="nav-link" to='/register'>
-            <i className="fas fa-user-plus nav-icon"></i>
+            <i className="fas fa-user-plus nav-icon" title = "register"></i>
           </Link>
         </li>       
         
         {/* Login Icon */}
         <li className="nav-item">
           <Link className="nav-link" to='/login'>
-            <i className="fas fa-sign-in-alt nav-icon"></i>
+            <i className="fas fa-sign-in-alt nav-icon" title = "login"></i>
           </Link>
         </li>       
       </ul>
@@ -52,28 +52,28 @@ class Navbar extends Component {
         {/* Home icon */}
         <li className="nav-item">
           <Link className="nav-link" to='/'>
-            <i className="fas fa-house-user nav-icon"></i>
+            <i className="fas fa-house-user nav-icon" title = "home"></i>
           </Link>
         </li>
 
         {/* Post icon */}    
         <li className="nav-item">
           <Link className="nav-link" to='/posts'>
-            <i className="fas fa-edit nav-icon"></i>
+            <i className="fas fa-edit nav-icon" title = "post"></i>
           </Link>
         </li>
 
         {/* Like icon */}
         <li className = "nav-item">
           <Link className = "nav-link" to = '/profile/user'>
-            <i className="fas fa-heart nav-icon"></i>
+            <i className="fas fa-heart nav-icon" title = "following"></i>
           </Link>
         </li>
         
         {/* Logout */}
         <li className="nav-item">
           <a className="nav-link" href="" onClick= {this.onLogoutClick.bind(this)}>
-            <i class="fas fa-sign-out-alt nav-icon"></i>
+            <i class="fas fa-sign-out-alt nav-icon" title = "logout"></i>
           </a>
         </li>
 
@@ -85,7 +85,7 @@ class Navbar extends Component {
               src= {user.avatar}
               alt= {user.name}
               style = {{width:'25px', marginRight: '5px'}}
-              title = "Link email to gravatar to display your avatar"
+              title = "profile"
             />
           </Link>
         </li>
@@ -109,7 +109,7 @@ class Navbar extends Component {
             <ul className="navbar-nav mr-auto">
               <li className = "nav-item">
                 <Link className = "nav-link" to = '/profile/all'>
-                  <i className="fas fa-users nav-icon"></i>
+                  <i className="fas fa-users nav-icon" title = "profiles"></i>
                 </Link>
               </li>
             </ul>
