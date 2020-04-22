@@ -3,41 +3,33 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import isEmpty from '../../validations/isEmpty';
 
+//  ProfileItem gets profile from Redux Store and display:
+//  1. user name
+//  2. avatar
+//  3. location
+
 class ProfileItem extends Component {
   render() {
     const { profile } = this.props;
 
     return (
-      <div className="card card-body bg-light mb-3">
-        <div className="row">
-          <div className="col-2">
-            <img src={profile.user.avatar} alt="" className="rounded-circle" />
-          </div>
-          <div className="col-lg-6 col-md-4 col-8">
-            <h3>{profile.user.name}</h3>
-            
-            <p>
-              {isEmpty(profile.location) ? null : (
-                <span>{profile.location.city} {profile.location.country}</span>
-              )}
-            </p>
-            
-            <Link to={`/profile/${profile.handle}`} className="btn btn-info">
-              View Profile
+      <div className="col-sm-4">
+        <div className="card text-center mb-3">
+          <h5 className="card-header">{profile.user.name}</h5>
+          <div className="card-body bg-light"> 
+            <Link to={`/profile/${profile.handle}`} >
+              <img src={profile.user.avatar}
+                alt=""
+                className="rounded-circle img-fluid" />
             </Link>
-
           </div>
-          <div className="col-md-4 d-none d-md-block">
-            <h4>Interest</h4>
-            <ul className="list-group">
-              {profile.interests.slice(0, 4).map((interest, index) => (
-                <li key={index} className="list-group-item">
-                  <i className="fa fa-check pr-1" />
-                  {interest}
-                </li>
-              ))}
-            </ul>
+          
+          <div className="card-footer text-muted">
+            {isEmpty(profile.location) ? null : (
+              <span>{profile.location.city} {profile.location.country}</span>
+            )}
           </div>
+                
         </div>
       </div>
     );

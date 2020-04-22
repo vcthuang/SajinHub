@@ -5,6 +5,14 @@ import Spinner from '../common/Spinner';
 import ProfileItem from './ProfileItem';
 import { getAllProfiles } from '../../actions/profileActions';
 
+// ProfileList lists profiles for all the users
+// For each user (details at ProfileItem.js):
+//  1. user name
+//  2. avatar
+//  3. location
+// these information is displayed.
+// The user can click on avatar to view details
+
 class ProfileList extends Component {
   componentDidMount() {
     this.props.getAllProfiles();
@@ -27,15 +35,17 @@ class ProfileList extends Component {
     }
 
     return (
-      <div className="profiles">
+      <div className="profileList">
         <div className="container">
           <div className="row">
             <div className="col-md-12">
               <h1 className="display-4 text-center">At a glance...</h1>
               <p className="lead text-center">
-                Let's add on to your followings
+                Here is the list of our awesome photographers
               </p>
-              {profileItems}
+              <div className="row">
+                {profileItems}
+              </div>  
             </div>
           </div>
         </div>

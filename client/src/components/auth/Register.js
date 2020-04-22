@@ -70,7 +70,7 @@ class Register extends Component {
             {/* Place a picture on the left */}
             <div className = "col-md-6 m-auto">
               {/* hide picture when device is smaller than md */}
-              <div className = "register-image d-none d-md-block "></div>
+              <div className = "register-image d-none d-md-block rounded"></div>
             </div>
 
             {/* Place the register form on the left */}

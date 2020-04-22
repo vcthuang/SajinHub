@@ -16,6 +16,8 @@ import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';                 // Authenticaiton
 import Login from './components/auth/Login';
 import Profile from './components/profile/Profile';                // Profile
+import ProfileHome from './components/profile/ProfileHome';
+import ProfileUpdate from './components/profile/ProfileUpdate';
 import ProfileList from './components/profileList/ProfileList';
 
 import jwt_decode from 'jwt-decode';                               // Decrypt
@@ -65,8 +67,12 @@ function App() {
           <Route exact path = '/register' component = {Register} />
           <Route exact path = '/login' component = {Login} />
           <Route exact path = '/profiles' component = {ProfileList} />
+          <Route exact path= "/profile/:handle" component={Profile} />
           <Switch>
-            <PrivateRoute exact path= "/profile" component= {Profile} />
+            <PrivateRoute exact path= "/profile" component= {ProfileHome} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path= "/profile-update" component= {ProfileUpdate} />
           </Switch>
         </div>
         <Footer />
