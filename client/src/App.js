@@ -17,6 +17,7 @@ import Register from './components/auth/Register';                 // Authentica
 import Login from './components/auth/Login';
 import Profile from './components/profile/Profile';                // Profile
 import ProfileHome from './components/profile/ProfileHome';
+import ProfileCreate from './components/profile/ProfileCreate';
 import ProfileUpdate from './components/profile/ProfileUpdate';
 import ProfileList from './components/profileList/ProfileList';
 
@@ -70,6 +71,9 @@ function App() {
           <Route exact path= "/profile/:handle" component={Profile} />
           <Switch>
             <PrivateRoute exact path= "/profile" component= {ProfileHome} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
           </Switch>
           <Switch>
             <PrivateRoute exact path= "/profile-update" component= {ProfileUpdate} />

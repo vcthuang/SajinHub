@@ -181,7 +181,7 @@ class ProfileHome extends Component {
                     Please take a moment to setup a profile...
                   </div>
 
-                  <Link to="/create-profile" className="btn btn-light">
+                  <Link to="/profile-create" className="btn btn-light">
                     Create
                   </Link>
                 </div>

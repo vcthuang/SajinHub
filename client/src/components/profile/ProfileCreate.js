@@ -6,15 +6,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getCurrentProfile, updateProfile } from '../../actions/profileActions';
+import { updateProfile } from '../../actions/profileActions';
 
 import InputField from '../common/InputField';
 import TextAreaField from '../common/TextAreaField';
-import isEmpty from '../../validations/isEmpty';
 
 
-// ProfileUpdate is loaded when the user want to create new or update existing profile.
-class ProfileUpdate extends Component {
+// ProfileCreate is a subset of ProfileUpdate.
+// The only difference is that this component does not attempt
+// to reach React store for profile information when it starts
+
+class ProfileCreate extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -32,41 +34,9 @@ class ProfileUpdate extends Component {
     this.onSave = this.onSave.bind(this);
   }
 
-  // If the user has a profile, we want to retrieve it
-  componentDidMount() {
-    this.props.getCurrentProfile();
-  }
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.errors) {
       this.setState({errors: nextProps.errors});
-    }
-
-    // If we are able to retrieve user profile from Redux store
-    if (nextProps.profile.profile) {
-
-      const profile = nextProps.profile.profile;
-      
-      // Bring Interests array back to CSV
-      let interestsCSV= profile.interests.join(',');
-      
-      // Make an empty string if the optional fields are empty
-      profile.bio = !isEmpty (profile.bio) ? profile.bio : '';
-      profile.website = !isEmpty (profile.website) ? profile.website : '';
-      profile.location.city = !isEmpty (profile.location.city) ? profile.location.city : '';
-      profile.location.country = !isEmpty (profile.location.country) ? profile.location.country : '';
-
-      // Place user info on the screen
-      // Since the input fields have value = this.state
-      this.setState({
-        handle: profile.handle,
-        bio: profile.bio,
-        website: profile.website,
-        city: profile.location.city,
-        country: profile.location.country,
-        interests: interestsCSV,
-        joinDate: profile.joinDate
-      });
     }
   };
 
@@ -191,18 +161,15 @@ class ProfileUpdate extends Component {
   }
 }
 
-ProfileUpdate.propTypes = {
-  getCurrentProfile: PropTypes.func.isRequired,
+ProfileCreate.propTypes = {
   updateProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  profile: state.profile,
   errors: state.errors
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, updateProfile })(withRouter(ProfileUpdate));
+export default connect (mapStateToProps, { updateProfile })(withRouter(ProfileCreate));
