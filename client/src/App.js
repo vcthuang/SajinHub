@@ -20,6 +20,7 @@ import ProfileHome from './components/profile/ProfileHome';
 import ProfileCreate from './components/profile/ProfileCreate';
 import ProfileUpdate from './components/profile/ProfileUpdate';
 import ProfileList from './components/profileList/ProfileList';
+import ProfileByID from './components/profile/ProfileByID';
 
 import jwt_decode from 'jwt-decode';                               // Decrypt
 import { logoutUser } from './actions/authActions';
@@ -27,6 +28,7 @@ import setAuthToken from './utils/setAuthToken';
 import { SET_CURRENT_USER } from './actions/types';
 
 import PrivateRoute from './components/common/PrivateRoute';
+
 
 //
 // END Import libraries
@@ -68,10 +70,15 @@ function App() {
           <Route exact path = '/register' component = {Register} />
           <Route exact path = '/login' component = {Login} />
           <Route exact path = '/profiles' component = {ProfileList} />
-          <Route exact path= "/profile/:handle" component={Profile} />
+          <Route exact strict path= "/profile/:handle" component={Profile} />
+          
           <Switch>
             <PrivateRoute exact path= "/profile" component= {ProfileHome} />
           </Switch>
+          <Switch>
+            <PrivateRoute exact strict path= "/profile/user/:user" component= {ProfileByID} />
+          </Switch>
+
           <Switch>
             <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
           </Switch>

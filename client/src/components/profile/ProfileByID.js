@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByHandle } from '../../actions/profileActions';
+import { getProfileByID } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -27,7 +27,7 @@ import isEmpty from '../../validations/isEmpty';
 // Ideally, this is also the place where the user could subscribe
 // to a following.
 
-class Profile extends Component {
+class ProfileByID extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -37,8 +37,8 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    if (this.props.match.params.handle) {
-      this.props.getProfileByHandle(this.props.match.params.handle);
+    if (this.props.match.params.userid) {
+      this.props.getProfileByID(this.props.match.params.userid);
     }
   }
 
@@ -139,21 +139,19 @@ class Profile extends Component {
     }
 
     return (
-      <div className="profile">
+      <div className="profileByID">
         <div className="container">
           {profileContent}
         </div>
-        {this.state.displayFollowings && 
-          <ProfileFollowings followings = {profile.followings}/>}
-        {this.state.displayFollowers && 
-          <ProfileFollowers followers = {profile.followers}/>}
+        {this.state.displayFollowings && <ProfileFollowings />}
+        {this.state.displayFollowers && <ProfileFollowers />}
       </div>
     )
   }
 }
 
-Profile.propTypes = {
-  getProfileByHandle: PropTypes.func.isRequired,
+ProfileByID.propTypes = {
+  getProfileByID: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
@@ -161,4 +159,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect (mapStateToProps, { getProfileByHandle })(withRouter(Profile));
+export default connect (mapStateToProps, { getProfileByID })(withRouter(ProfileByID));

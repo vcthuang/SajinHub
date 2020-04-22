@@ -2,9 +2,10 @@
 // 1. updateProfile(profileData, history)
 // 2. getCurrentProfile
 // 3. getProfileByHandle(handle)
-// 4. getAllProfies
-// 5. deleteAccount
-// 6. setProfileLoading
+// 4. getProfileByID(userID)
+// 5. getAllProfies
+// 6. deleteAccount
+// 7. setProfileLoading
 
 // Make calls to server
 import axios from 'axios';
@@ -67,7 +68,24 @@ export const getProfileByHandle = handle => dispatch => {
       }))
 };
 
-// 4. Get all profiles
+// 4. Get profile by ID
+export const getProfileByID = userid => dispatch => {
+  dispatch(setProfileLoading());
+  axios
+    .get (`/api/profile/user/${userid}`)
+    .then (res =>
+      dispatch ({
+        type: GET_PROFILE,
+        payload: res.data
+      }))
+    .catch (err =>
+      dispatch ({
+        type: GET_PROFILE,
+        payload: {}
+      }))
+};
+
+// 5. Get all profiles
 export const getAllProfiles = () => dispatch => {
   dispatch(setProfileLoading());
   axios
@@ -87,7 +105,7 @@ export const getAllProfiles = () => dispatch => {
 };
 
 
-// 5. Delete account & profile
+// 6. Delete account & profile
 export const deleteAccount = () => dispatch => {
   if (window.confirm ('Are you sure?  This action can not be undone.')) {
     axios
@@ -107,7 +125,7 @@ export const deleteAccount = () => dispatch => {
   }
 };
 
-// 6. Profile loading
+// 7. Profile loading
 export const setProfileLoading = () => {
   return {
     type: PROFILE_LOADING
