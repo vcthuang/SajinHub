@@ -77,6 +77,8 @@ class ProfileHome extends Component {
         profileContent = (
           <div>
             <div className="row">
+              {/* Leftside contains: avatar, location, website */}
+              {/* Delete account and update profile buttons    */}
               <div className="col-sm-4 card">
                 <div className="card-body text-center">
                   <img 
@@ -101,6 +103,7 @@ class ProfileHome extends Component {
                   </div>
                 </div>
               </div>
+              {/* Rightside contains: joined date, name, handle, bio, interests*/}
               <div className="col-sm-8 card bg-dark">  
                 <div className="card-body text-white">
                   <div className="card-text text-right mb-3">

@@ -26,6 +26,7 @@ class ProfileList extends Component {
       profileItems = <Spinner />;
     } else {
       if (profiles.length > 0) {
+        // transform each profile in profiles array into JSX for display
         profileItems = profiles.map(profile => (
           <ProfileItem key={profile._id} profile={profile} />
         ));

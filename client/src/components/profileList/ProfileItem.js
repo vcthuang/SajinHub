@@ -13,6 +13,7 @@ class ProfileItem extends Component {
     const { profile } = this.props;
 
     return (
+      // Each card contains user handle, avatar and location
       <div className="col-sm-4">
         <div className="card text-center mb-3">
           <h5 className="card-header">{profile.user.name}</h5>
@@ -23,13 +24,11 @@ class ProfileItem extends Component {
                 className="rounded-circle img-fluid" />
             </Link>
           </div>
-          
           <div className="card-footer text-muted">
             {isEmpty(profile.location) ? null : (
               <span>{profile.location.city} {profile.location.country}</span>
             )}
           </div>
-                
         </div>
       </div>
     );

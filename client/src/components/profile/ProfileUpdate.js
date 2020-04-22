@@ -12,6 +12,8 @@ import InputField from '../common/InputField';
 import TextAreaField from '../common/TextAreaField';
 import isEmpty from '../../validations/isEmpty';
 
+
+// ProfileUpdate is loaded when the user want to create new or update existing profile.
 class ProfileUpdate extends Component {
   constructor (props) {
     super (props);
@@ -99,6 +101,7 @@ class ProfileUpdate extends Component {
       <div className="profileUpdate">
         <div className="container">
           <div className= "row">
+            {/* Display user and avatar */}
             <div className= "col-md-7 card bg-dark text-white">
               <h5 className="card-header">More about 
                 <img 
@@ -110,6 +113,7 @@ class ProfileUpdate extends Component {
                 {user.name}...
               </h5>
               
+              {/* Form asked for: handle, bio, website, location and interests */}
               <form className="card-body" onSubmit={this.onSave}>
                 <InputField
                   placeholder="Profile Handle (required)"
@@ -175,7 +179,7 @@ class ProfileUpdate extends Component {
                 </div>
               </form>
             </div>
-            {/* Place a picture on the left */}
+            {/* Place a picture on the right */}
             <div className = "col-md-4 m-auto">
               {/* hide picture when device is smaller than md */}
               <div className = "profile-image d-none d-md-block rounded"></div>

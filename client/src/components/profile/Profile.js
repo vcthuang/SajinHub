@@ -66,6 +66,7 @@ class Profile extends Component {
       profileContent = (
         <div>
           <div className="row">
+            {/* Leftside contains avatar, location, website */}
             <div className="col-sm-4 card">
               <div className="card-body text-center">
                 <img 
@@ -78,6 +79,7 @@ class Profile extends Component {
                 {profile.website && (<a className="card-text" href={profile.website} target="_blank">{profile.website}</a>)}
               </div>
             </div>
+            {/* Rightside contains joined date, name, handle, bio, interests*/}
             <div className="col-sm-8 card bg-dark">  
               <div className="card-body text-white">
                 <div className="card-text text-right mb-3">
