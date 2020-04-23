@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -106,7 +106,7 @@ class ProfileHome extends Component {
               {/* Rightside contains: joined date, name, handle, bio, interests*/}
               <div className="col-sm-8 card bg-dark">  
                 <div className="card-body text-white">
-                  <div className="card-text text-right mb-3">
+                  <div className="card-text mb-3">
                     <small className="card-text">Royal member since&nbsp;
                       <Moment format="YYYY/MM/DD">{profile.joinDate}</Moment>
                     </small>
@@ -139,7 +139,8 @@ class ProfileHome extends Component {
                       }}
                       className="btn btn-dark mx-3"
                     ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                      Followings
+                      Followings{'\u00A0'}{'\u00A0'}
+                      <span className="badge badge-light mx-1 ">{profile.followings.length}</span>
                     </button>
                     <button
                       type="button"
@@ -150,7 +151,8 @@ class ProfileHome extends Component {
                       }}
                       className="btn btn-dark mx-3"
                     ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                      Followers
+                      Followers{'\u00A0'}{'\u00A0'}
+                      <span className="badge badge-light mx-1">{profile.followers.length}</span>
                     </button>
                   </div>
                 </div>               
@@ -218,4 +220,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(withRouter(ProfileHome));
+export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(ProfileHome);

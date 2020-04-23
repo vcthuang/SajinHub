@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 // Redux libraries
-import PropTypes from 'prop-types';
 import isEmpty from '../../validations/isEmpty';
 
 // ProfileFollowers list all the followers by handle and avatar
 class ProfileFollowers extends Component {
+
   render() {
     let followers;
     if ( isEmpty(this.props.followers)) {
@@ -18,18 +18,8 @@ class ProfileFollowers extends Component {
         </div>
       );
     } else {
-      followers = this.props.followers.map(follower => (
-        <div className="card border-0 text-center col-md-2">
-          <div className="card-body bg-light"> 
-            <h5 className="card-title">{follower.name}</h5>
-            <Link to={`/profile/user/${follower.user}`} >
-              <img src={follower.avatar}
-                alt=""
-                style = {{width:'50px'}}
-                className="rounded-circle img-fluid" />
-            </Link>
-          </div>
-        </div>
+      followers = this.props.followers.map(profile => (
+        <RenderUser key={profile._id} profile={profile} />
       ));
     }
   
@@ -47,5 +37,23 @@ class ProfileFollowers extends Component {
   }
 }
 
+class RenderUser extends Component {
+  render() {
+    const { profile } = this.props;
+    return (
+      <div className="card border-0 text-center col-md-2">
+        <div className="card-body bg-light"> 
+          <h5 className="card-title">{profile.name}</h5>
+          <Link to={`/profile/user/${profile.user._id}`} >
+            <img src={profile.avatar}
+              alt=""
+              style = {{width:'50px'}}
+              className="rounded-circle img-fluid" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+}
 
-export default ProfileFollowers;
+export default withRouter(ProfileFollowers);

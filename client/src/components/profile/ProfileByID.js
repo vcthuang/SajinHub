@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -7,7 +6,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByID } from '../../actions/profileActions';
+import { getProfileByID , addFollowing, removeFollowing } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -40,6 +39,14 @@ class ProfileByID extends Component {
     if (this.props.match.params.userid) {
       this.props.getProfileByID(this.props.match.params.userid);
     }
+  }
+
+  onAddFollowing(userid) {
+    this.props.addFollowing (userid);
+  }
+
+  onRemoveFollowing(userid) {
+    this.props.removeFollowing (userid);
   }
 
   render() {
@@ -82,13 +89,26 @@ class ProfileByID extends Component {
             {/* Rightside contains joined date, name, handle, bio, interests*/}
             <div className="col-sm-8 card bg-dark">  
               <div className="card-body text-white">
-                <div className="card-text text-right mb-3">
+                <div className="card-text mb-3">
                   <small className="card-text">Royal member since&nbsp;
                     <Moment format="YYYY/MM/DD">{profile.joinDate}</Moment>
                   </small>
+
+                  <button
+                    onClick={this.onAddFollowing.bind(this, profile.user._id)}
+                    className="btn btn-dark float-right"
+                  ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+                    Subscribe
+                  </button>
+                  <button
+                    onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
+                    className="btn btn-dark float-right"
+                  ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
+                    Unsubscribe
+                  </button>
                 </div>
                             
-                <div className="card-title d-flex flex-wrap justify-content-center align-items-center">
+                <div className="card-title d-flex flex-wrap justify-content-center align-items-center pt-3">
                   <h4>
                     {profile.user.name}
                   </h4>
@@ -117,7 +137,8 @@ class ProfileByID extends Component {
                     }}
                     className="btn btn-dark mx-3"
                   ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                    Followings
+                    Followings{'\u00A0'}{'\u00A0'}
+                    <span className="badge badge-light mx-1">{profile.followings.length}</span>
                   </button>
                   <button
                     type="button"
@@ -128,7 +149,8 @@ class ProfileByID extends Component {
                     }}
                     className="btn btn-dark mx-3"
                   ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                    Followers
+                    Followers{'\u00A0'}{'\u00A0'}
+                    <span className="badge badge-light mx-1">{profile.followers.length}</span>
                   </button>
                 </div>
               </div>               
@@ -143,8 +165,10 @@ class ProfileByID extends Component {
         <div className="container">
           {profileContent}
         </div>
-        {this.state.displayFollowings && <ProfileFollowings />}
-        {this.state.displayFollowers && <ProfileFollowers />}
+        {this.state.displayFollowings && 
+          <ProfileFollowings followings = {profile.followings}/>}
+        {this.state.displayFollowers && 
+          <ProfileFollowers followers = {profile.followers}/>}
       </div>
     )
   }
@@ -152,6 +176,8 @@ class ProfileByID extends Component {
 
 ProfileByID.propTypes = {
   getProfileByID: PropTypes.func.isRequired,
+  addFollowing: PropTypes.func.isRequired,
+  removeFollowing: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
@@ -159,4 +185,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect (mapStateToProps, { getProfileByID })(withRouter(ProfileByID));
+export default connect (mapStateToProps, { getProfileByID, addFollowing, removeFollowing })(ProfileByID);

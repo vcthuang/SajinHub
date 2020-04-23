@@ -5,7 +5,9 @@
 // 4. getProfileByID(userID)
 // 5. getAllProfies
 // 6. deleteAccount
-// 7. setProfileLoading
+// 7. AddFollowing(userID, history)
+// 8. RemoveFollowing(userID, history)
+// 9. setProfileLoading
 
 // Make calls to server
 import axios from 'axios';
@@ -125,7 +127,26 @@ export const deleteAccount = () => dispatch => {
   }
 };
 
-// 7. Profile loading
+// 7. Subscribe or add Following
+// We don't really do anything with the errors
+export const addFollowing = (userid, history) => dispatch => {
+  dispatch(setProfileLoading());
+  axios
+    .post(`/api/profile/followings/${userid}`)
+    .then (res => dispatch (getAllProfiles()))
+    .catch (err => history.push ('/profile'))
+};
+
+// 8. Remove subscribe or following
+export const removeFollowing = (userid, history) => dispatch => {
+  dispatch(setProfileLoading());
+  axios
+    .delete(`/api/profile/followings/${userid}`)
+    .then (res => dispatch (getAllProfiles()))
+    .catch (err => history.push ('/profile'))
+};
+
+// 9. Profile loading
 export const setProfileLoading = () => {
   return {
     type: PROFILE_LOADING
