@@ -14,7 +14,6 @@ const InputField = ({ type, placeholder, value, onChange, name, error }) => {
         value={value}
         onChange={onChange}
         name={name}
-        required
       />
       {error && (
         <div className="invalid-feedback">{error}</div>

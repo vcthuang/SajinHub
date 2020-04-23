@@ -16,10 +16,14 @@ import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';                 // Authenticaiton
 import Login from './components/auth/Login';
 
+import Posts from './components/posts/Posts';
+import Post from './components/posts/Post';
+
 import jwt_decode from 'jwt-decode';                               // Decrypt
 import { logoutUser } from './actions/authActions';
 import setAuthToken from './utils/setAuthToken';
 import { SET_CURRENT_USER } from './actions/types';
+import PostForm from './components/posts/PostForm';
 
 //
 // END Import libraries
@@ -59,6 +63,9 @@ function App() {
         <Route exact path = '/' component = {Landing} />
         <Route exact path = '/register' component = {Register} />
         <Route exact path = '/login' component = {Login} />
+        <Route exact path = '/feed' component = {Posts} />
+        <Route exact path = '/posts/:id' component = {Post} />
+        <Route exact path = '/post' component = {PostForm} />
         <Footer />
     </Router>
   </Provider>

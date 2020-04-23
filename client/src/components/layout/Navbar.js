@@ -58,7 +58,7 @@ class Navbar extends Component {
 
         {/* Post icon */}    
         <li className="nav-item">
-          <Link className="nav-link" to='/posts'>
+          <Link className="nav-link" to='/post'>
             <i className="fas fa-edit nav-icon"></i>
           </Link>
         </li>

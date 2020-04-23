@@ -3,12 +3,12 @@ Get/Create/Edit/Delete "post"
 1. GET api/posts   - GET ALL "posts"
 2. GET api/posts/:id   - GET A "post" 
 3. POST api/posts   - CREATE a new "post"
-4. POST api/posts/:id   - EDIT a "post" 
+(4. POST api/posts/:id   - EDIT a "post") 
 5. DELETE api/posts/:id   - DELETE a "post" 
 
 Like/Dislike "post"
 6. POST api/posts/like/:id   - LIKE a "post" 
-7. POST api/posts/dislike/:id   - DISLIKE a "post" 
+(7. POST api/posts/dislike/:id   - DISLIKE a "post")
 
 Create/Delete/Reply "comment"
 8. POST api/posts/comment/:id   - CREATE a "comment" 
@@ -90,51 +90,50 @@ router.post(
 );
 
 
-// @route POST api/posts/:id 
-// @desc EDIT a post by Post _id
-// @access Priavte
-router.post(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+// // @route POST api/posts/:id 
+// // @desc EDIT a post by Post _id
+// // @access Priavte
+// router.post(
+//   '/:id',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
 
-    // validate required fields
-    const { errors, isValid } = validatePostInput(req.body);
+//     // validate required fields
+//     const { errors, isValid } = validatePostInput(req.body);
 
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
+//     if (!isValid) {
+//       return res.status(400).json(errors);
+//     }
 
-    // passed validation
-    // first, find the POST
-    Post.findById(req.params.id)
-    .then(post => {
-      if (!post) {
-        return res.status(404).json({ post: 'Post not found' });
-      }
+//     // passed validation
+//     // first, find the POST
+//     Post.findById(req.params.id)
+//     .then(post => {
+//       if (!post) {
+//         return res.status(404).json({ post: 'Post not found' });
+//       }
 
-      // Edit the post content
-      const editPost = {
-        user: req.user.id,
-        image: req.body.image,
-        text: req.body.text,
-        name: req.user.name,
-        avatar: req.user.avatar
-      };
+//       // Edit the post content
+//       const editPost = {
+//         user: req.user.id,
+//         text: req.body.text,
+//         name: req.user.name,
+//         avatar: req.user.avatar
+//       };
 
-      // and update
-      Post.findOneAndUpdate(
-        { user: req.user.id },
-        { $set: editPost },
-        { new: true }
-      )
-      .then(post => res.json(post))
-      .catch(err => res.json(err));
+//       // and update
+//       Post.findOneAndUpdate(
+//         { user: req.user.id },
+//         { $set: editPost },
+//         { new: true }
+//       )
+//       .then(post => res.json(post))
+//       .catch(err => res.json(err));
 
-    })
-    .catch(() => res.status(404).json({ post: 'Post not found' }));
-  }
-);
+//     })
+//     .catch(() => res.status(404).json({ post: 'Post not found' }));
+//   }
+// );
 
 
 // @route DELETE api/posts/:id 
@@ -179,59 +178,70 @@ router.post(
 
       // second, check if the user has already liked the post
       if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
-        return res.status(400).json({ like: 'You have already liked this post' });
+
+      const removeIndex =
+        post.likes
+          .map(like => like.user.toString())
+          .indexOf(req.user.id);
+
+        post.likes.splice(removeIndex, 1);
+        post.save()
+          .then(post => res.json(post))
+          .catch(err => res.json(err));
+      } else  {
+        // add the user's "like" to the likes array
+        post.likes.unshift({
+          user: req.user.id,
+          name: req.user.name,
+          avatar: req.user.avatar
+        });
+
+        // save the updated post
+        post.save()
+          .then(post => res.json(post))
+          .catch(err => res.json(err));
       }
 
-      // add the user's "like" to the likes array
-      post.likes.unshift({ 
-        user: req.user.id,
-        name: req.user.name,
-        avatar: req.user.avatar
-       });
 
-      // save the updated post
-      post.save()
-      .then(post => res.json(post))
-      .catch(err => res.json(err));
     })
     .catch(() => res.status(404).json({ post: 'Post not found' }));
   }
 );
 
 
-// @route POST api/posts/dislike/:id  
-// @desc DISLIKE a post by Post _id
-// @access Private
-router.post(
-  '/dislike/:id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+// // @route POST api/posts/dislike/:id  
+// // @desc DISLIKE a post by Post _id
+// // @access Private
+// router.post(
+//   '/dislike/:id',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
     
-    // first, find the POST
-    Post.findById(req.params.id)
-    .then(post => {
+//     // first, find the POST
+//     Post.findById(req.params.id)
+//     .then(post => {
 
-      // second, check if the user has already liked the post
-      if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
-        return res.status(400).json({ like: 'You have not liked this post' });
-      }
+//       // second, check if the user has already liked the post
+//       if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+//         return res.status(400).json({ like: 'You have not liked this post' });
+//       }
 
-      // the user has already liked, now the like will be removed
-      const removeIndex = 
-      post.likes
-      .map(like => like.user.toString())
-      .indexOf(req.params.id);
+//       // the user has already liked, now the like will be removed
+//       const removeIndex = 
+//       post.likes
+//       .map(like => like.user.toString())
+//       .indexOf(req.params.id);
 
-      post.likes.splice(removeIndex, 1);
+//       post.likes.splice(removeIndex, 1);
 
-      // save the updated post
-      post.save()
-        .then(post => res.json(post))
-        .catch(err => res.json(err));
-    })
-    .catch(() => res.status(404).json({ post: 'Post not found' }));
-  }
-);
+//       // save the updated post
+//       post.save()
+//         .then(post => res.json(post))
+//         .catch(err => res.json(err));
+//     })
+//     .catch(() => res.status(404).json({ post: 'Post not found' }));
+//   }
+// );
 
 
 // @route POST api/posts/comment/:id  

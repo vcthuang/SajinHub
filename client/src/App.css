@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Mali:wght@600&display=swap');
+
 /* Navbar */
 .nav-main {
   margin-bottom: 19px;
@@ -41,7 +43,7 @@
   font-weight: bolder;
 }
 
-.btn:focus, .btn:active, .form-control {
+.btn:focus, .btn:active, .btn-small, .form-control, .close {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -104,3 +106,4 @@
   margin-right: 30px;
   margin-left: 20px;
 }
+
