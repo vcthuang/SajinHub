@@ -50,6 +50,16 @@ const profileSchema = new Schema({
         ref:'users'
       },
 
+      name: {
+        type: String,
+        required: true
+      },
+
+      avatar: {
+        type: String,
+        required: false
+      },
+      
       beginDate: {
         type: Date,
         default: Date.now
@@ -62,6 +72,16 @@ const profileSchema = new Schema({
       user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
+      },
+
+      name: {
+        type: String,
+        required: true
+      },
+
+      avatar: {
+        type: String,
+        required: false
       },
 
       beginDate: {

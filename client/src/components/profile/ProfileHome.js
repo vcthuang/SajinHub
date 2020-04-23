@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -48,7 +48,7 @@ class ProfileHome extends Component {
     
   // When create button is click on Profile
   // direct user to profileUpdate
-  onCreateClick (e) {
+  onUpdateClick (e) {
     this.props.history.push('/profile-update');
   }
 
@@ -96,7 +96,7 @@ class ProfileHome extends Component {
                       <i className="fas fa-user-minus " title="Delete" />
                     </button>
                     <button
-                      onClick= {this.onCreateClick.bind(this)}
+                      onClick= {this.onUpdateClick.bind(this)}
                       className= "btn btn-dark">
                       <i className="fas fa-user-edit" title="Update" />           
                     </button>
@@ -106,16 +106,14 @@ class ProfileHome extends Component {
               {/* Rightside contains: joined date, name, handle, bio, interests*/}
               <div className="col-sm-8 card bg-dark">  
                 <div className="card-body text-white">
-                  <div className="card-text text-right mb-3">
+                  <div className="card-text mb-3">
                     <small className="card-text">Royal member since&nbsp;
                       <Moment format="YYYY/MM/DD">{profile.joinDate}</Moment>
                     </small>
                   </div>
                   
                   <div className="card-title d-flex flex-wrap justify-content-center align-items-center">
-                    <h4>
-                      <Link to = {`/profile/${profile.handle}`}>{user.name}</Link>
-                    </h4>
+                    <h4>{user.name}</h4>
                     <small className="pl-3">aka {profile.handle}</small>
                   </div>
 
@@ -141,7 +139,8 @@ class ProfileHome extends Component {
                       }}
                       className="btn btn-dark mx-3"
                     ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                      Followings
+                      Followings{'\u00A0'}{'\u00A0'}
+                      <span className="badge badge-light mx-1 ">{profile.followings.length}</span>
                     </button>
                     <button
                       type="button"
@@ -152,7 +151,8 @@ class ProfileHome extends Component {
                       }}
                       className="btn btn-dark mx-3"
                     ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                      Followers
+                      Followers{'\u00A0'}{'\u00A0'}
+                      <span className="badge badge-light mx-1">{profile.followers.length}</span>
                     </button>
                   </div>
                 </div>               
@@ -164,28 +164,30 @@ class ProfileHome extends Component {
          // User is logged in but has no profile
          profileContent = (
           <div>
-            <div className="card border-0 bg-dark" >
-              <div className="row">
-                <div className="col-sm-4 card-body bg-white text-center">
+            <div className="row">
+              <div className="col-sm-4 card">
+                <div className="card-body text-center">
                   <img 
                     className="rounded-circle img-fluid mb-4"
                     alt=""
                     src={user.avatar} />
                 </div>
+              </div>
                         
-                <div className="col-sm-8 card-body text-white">
-                  <div className="card-title">
-                    Dear {user.name}, 
-                  </div>
-                  <div className="card-text mb-5">
-                    Please take a moment to setup a profile...
-                  </div>
-
-                  <Link to="/profile-create" className="btn btn-light">
+              <div className="col-sm-8 card bg-dark text-white">
+                <div className="card-header">
+                  Dear {user.name}, 
+                </div>
+                <div className="card-body mb-5">
+                  Please take a moment to setup a profile...
+                </div>
+                <div className="card-body text-right">
+                  <Link to= '/profile-create' className= "btn btn-dark">
+                    <i className= "fas fa-user-edit pr-2" />
                     Create
                   </Link>
-                </div>
-              </div>   
+                </div>  
+              </div>
             </div>
           </div>
         );
@@ -197,8 +199,10 @@ class ProfileHome extends Component {
         <div className="container">
           {profileContent}
         </div>
-        {this.state.displayFollowings && <ProfileFollowings />}
-        {this.state.displayFollowers && <ProfileFollowers />}
+        {this.state.displayFollowings && 
+          <ProfileFollowings followings = {profile.followings}/>}
+        {this.state.displayFollowers && 
+          <ProfileFollowers followers = {profile.followers}/>}
       </div>
     )
   }
@@ -216,4 +220,4 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(withRouter(ProfileHome));
+export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(ProfileHome);

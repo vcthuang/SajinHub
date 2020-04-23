@@ -73,7 +73,7 @@ class Navbar extends Component {
         {/* Logout */}
         <li className="nav-item">
           <a className="nav-link" href="" onClick= {this.onLogoutClick.bind(this)}>
-            <i class="fas fa-sign-out-alt nav-icon" title = "logout"></i>
+            <i className="fas fa-sign-out-alt nav-icon" title = "logout"></i>
           </a>
         </li>
 

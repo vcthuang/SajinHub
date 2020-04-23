@@ -202,8 +202,9 @@ router.post(
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
     Profile.findOne ({user: req.user.id})
+      .populate('user',['name','avatar'])
       .then( profile => {
-        // Rule 1:  User have to have a profile before following
+        // Rule 1:  User has to have a profile before following
         if (!profile)
           return res.status(400).json({noprofile: 'Please create profile before adding followings'});
 
@@ -220,6 +221,7 @@ router.post(
 
         // First make sure the following (friend) has a profile
         Profile.findOne({user: req.params.user_id})
+          .populate('user',['name','avatar'])
           .then (friendprofile => {
             // Rule 4:  User needs a profile before anyone can follow
             if (!friendprofile)
@@ -227,12 +229,22 @@ router.post(
             
             // All rules are followed, user can officially has a following (friend)
             // Add req.params.user_id (friend) to followings array of req.user_id (current user)
-            profile.followings.unshift ({user: req.params.user_id});
+            profile.followings.unshift ({
+              user: req.params.user_id,
+              name: friendprofile.user.name,
+              avatar: friendprofile.user.avatar
+            });
+
             // Write to MongoDB
             profile.save().then (profile => res.json(profile));
 
             // Add req.user_id (current user) to followers array of req.params.user_id (friend)
-            friendprofile.followers.unshift ({user: req.user.id});
+            friendprofile.followers.unshift ({
+              user: req.user.id,
+              name: profile.user.name,
+              avatar: profile.user.avatar
+            });
+
             friendprofile.save().then (friendprofile => res.json(friendprofile));
           })
           .catch (err=>res.status(404).json(err));

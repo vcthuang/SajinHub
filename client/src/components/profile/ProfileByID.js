@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByHandle, getAllProfiles, addFollowing, removeFollowing } from '../../actions/profileActions';
+import { getProfileByID, getAllProfiles, addFollowing, removeFollowing } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -17,6 +17,7 @@ import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
 
 
+
 // Profile is loaded when the user click on avatar on profileList
 // This means, there is not going to be a chance for user to
 // to click on other user who doesn't have profile.
@@ -24,13 +25,10 @@ import isEmpty from '../../validations/isEmpty';
 // All profile information is displayed.  The user can toggle
 // following and follower buttons to view more information.
 // 
-// This is also the place where the user could subscribe or 
-// unsubscribe to a following.
-//
-// Besides the buttons, the display is similar to that of 
-// ProfileHome and ProfileByID.
+// Ideally, this is also the place where the user could subscribe
+// to a following.
 
-class Profile extends Component {
+class ProfileByID extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -39,30 +37,34 @@ class Profile extends Component {
     }
   }
 
-  // Get profile from Redux store when the component is loading
   componentDidMount() {
-    if (this.props.match.params.handle) {
-      this.props.getProfileByHandle(this.props.match.params.handle);
+    if (this.props.match.params.userid) {
+      this.props.getProfileByID(this.props.match.params.userid);
     }
-    // we need to get current user profile if the user is logged in
+    // we need to get current user profile,
     // and the easiet way to to find via Redux store Profiles
     this.props.getAllProfiles();
   }
 
-  // Fire Redux action when user wants to add a following
+  // Refresh when data changes
+  // when user id is changed, we need to fresh the page
+  componentWillReceiveProps(nextProps) {
+
+  } 
+
   onAddFollowing(userid) {
     this.props.addFollowing (userid);
   }
 
-  // Fire Redux action when user wants to remove a following
   onRemoveFollowing(userid) {
     this.props.removeFollowing (userid);
   }
 
   render() {
+    
     const { profile, loading, profiles } = this.props.profile;
-    const { user, isAuthenticated } = this.props.auth;
-
+    const { user } = this.props.auth;
+    
     let profileContent;
     
     if (profile === null || loading) {
@@ -81,39 +83,37 @@ class Profile extends Component {
       ));
 
       let subsButton;
-      if (isAuthenticated) {
-        // User is looking at it's own profile
-        if (profile.user._id === user.id) {
+      // Can't subscribe to yourself
+      if (profile.user._id !== user.id) {
+        // Display subscribe or unsubscribe button
+        // Find the profile for current user
+        const currentUserProfile = profiles.find(p => p.user._id === user.id);
+        // Check if current user is following the profile user
+        const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
+
+        if (!found) {
           subsButton = (
-            <div className="btn btn-dark float-right">
-              <i className="fas fa-user pr-2" style={{color:"red"}}></i>
-              Me
-            </div>);
+            <button
+              onClick={this.onAddFollowing.bind(this, profile.user._id)}
+              className="btn btn-dark float-right"
+            ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+              Subscribe
+            </button>);
         } else {
-          // Display subscribe or unsubscribe button
-          // Find the profile for current user
-          const currentUserProfile = profiles.find(p => p.user._id === user.id);
-          // Check if current user is following the profile user
-          const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
-                  
-          if (!found) {
-            subsButton = (
-              <button
-                onClick={this.onAddFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
-                Subscribe
-              </button>);
-          } else {
-            subsButton = (
-              <button
-                onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
-                Unsubscribe
-              </button>);
-          }
+          subsButton = (
+            <button
+              onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
+              className="btn btn-dark float-right"
+            ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
+              Unsubscribe
+            </button>);
         }
+      } else {
+        subsButton = (
+          <div className="btn btn-dark float-right">
+            <i className="fas fa-user" style={{color:"red"}}></i>
+            Me
+          </div>);
       }
 
       profileContent = (
@@ -195,7 +195,7 @@ class Profile extends Component {
     }
 
     return (
-      <div className="profile">
+      <div className="profileByID">
         <div className="container">
           {profileContent}
         </div>
@@ -208,8 +208,8 @@ class Profile extends Component {
   }
 }
 
-Profile.propTypes = {
-  getProfileByHandle: PropTypes.func.isRequired,
+ProfileByID.propTypes = {
+  getProfileByID: PropTypes.func.isRequired,
   getAllProfiles: PropTypes.func.isRequired,
   addFollowing: PropTypes.func.isRequired,
   removeFollowing: PropTypes.func.isRequired,
@@ -222,4 +222,4 @@ const mapStateToProps = state => ({
   auth: state.auth,
 });
 
-export default connect (mapStateToProps, { getProfileByHandle, getAllProfiles, addFollowing, removeFollowing })(withRouter(Profile));
+export default connect (mapStateToProps, { getProfileByID, getAllProfiles, addFollowing, removeFollowing })(withRouter(ProfileByID));
