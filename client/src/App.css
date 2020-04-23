@@ -104,3 +104,10 @@
   margin-right: 30px;
   margin-left: 20px;
 }
+
+.profile-image {
+  background: url('./img/trees.PNG') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+}

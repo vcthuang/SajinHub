@@ -4,7 +4,7 @@ import './App.css';
 // BEGIN Import libraries
 //
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';   // Routing
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';   // Routing
 
 import {Provider} from 'react-redux';                              // Redux
 import store from './store';
@@ -15,11 +15,18 @@ import Landing from './components/layout/Landing';
 import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';                 // Authenticaiton
 import Login from './components/auth/Login';
+import Profile from './components/profile/Profile';                // Profile
+import ProfileHome from './components/profile/ProfileHome';
+import ProfileCreate from './components/profile/ProfileCreate';
+import ProfileUpdate from './components/profile/ProfileUpdate';
+import ProfileList from './components/profileList/ProfileList';
 
 import jwt_decode from 'jwt-decode';                               // Decrypt
 import { logoutUser } from './actions/authActions';
 import setAuthToken from './utils/setAuthToken';
 import { SET_CURRENT_USER } from './actions/types';
+
+import PrivateRoute from './components/common/PrivateRoute';
 
 //
 // END Import libraries
@@ -57,8 +64,21 @@ function App() {
     <Router>
         <Navbar />
         <Route exact path = '/' component = {Landing} />
-        <Route exact path = '/register' component = {Register} />
-        <Route exact path = '/login' component = {Login} />
+        <div className= "container">
+          <Route exact path = '/register' component = {Register} />
+          <Route exact path = '/login' component = {Login} />
+          <Route exact path = '/profiles' component = {ProfileList} />
+          <Route exact path= "/profile/:handle" component={Profile} />
+          <Switch>
+            <PrivateRoute exact path= "/profile" component= {ProfileHome} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path= "/profile-update" component= {ProfileUpdate} />
+          </Switch>
+        </div>
         <Footer />
     </Router>
   </Provider>
