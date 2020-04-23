@@ -41,12 +41,13 @@ class Profile extends Component {
 
   // Get profile from Redux store when the component is loading
   componentDidMount() {
-    if (this.props.match.params.handle) {
-      this.props.getProfileByHandle(this.props.match.params.handle);
-    }
     // we need to get current user profile if the user is logged in
     // and the easiet way to to find via Redux store Profiles
     this.props.getAllProfiles();
+
+    if (this.props.match.params.handle) {
+      this.props.getProfileByHandle(this.props.match.params.handle);
+    }
   }
 
   // Fire Redux action when user wants to add a following

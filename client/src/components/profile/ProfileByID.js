@@ -38,19 +38,26 @@ class ProfileByID extends Component {
   }
 
   componentDidMount() {
-    if (this.props.match.params.userid) {
-      this.props.getProfileByID(this.props.match.params.userid);
-    }
     // we need to get current user profile,
     // and the easiet way to to find via Redux store Profiles
     this.props.getAllProfiles();
+
+    if (this.props.match.params.userid) {
+      this.props.getProfileByID(this.props.match.params.userid);
+    }
   }
 
   // Refresh when data changes
   // when user id is changed, we need to fresh the page
-  componentWillReceiveProps(nextProps) {
-
-  } 
+  componentDidUpdate = (prevProps) => {
+    if(this.props.match.params.userid !== prevProps.match.params.userid) {
+      this.setState({
+        displayFollowings: false,
+        displayFollowers: false
+      });
+      this.props.getProfileByID(this.props.match.params.userid);
+   };
+  };
 
   onAddFollowing(userid) {
     this.props.addFollowing (userid);
