@@ -14,7 +14,6 @@ const InputField = ({ type, placeholder, value, onChange, name, error, info }) =
         value={value}
         onChange={onChange}
         name={name}
-        required
       />
       {info && <small className="form-text text-muted">{info}</small>}
       {error && (
