@@ -21,10 +21,14 @@ import ProfileCreate from './components/profile/ProfileCreate';
 import ProfileUpdate from './components/profile/ProfileUpdate';
 import ProfileList from './components/profileList/ProfileList';
 
+import Posts from './components/posts/Posts';
+import Post from './components/posts/Post';
+
 import jwt_decode from 'jwt-decode';                               // Decrypt
 import { logoutUser } from './actions/authActions';
 import setAuthToken from './utils/setAuthToken';
 import { SET_CURRENT_USER } from './actions/types';
+import PostForm from './components/posts/PostForm';
 
 import PrivateRoute from './components/common/PrivateRoute';
 
@@ -64,6 +68,9 @@ function App() {
     <Router>
         <Navbar />
         <Route exact path = '/' component = {Landing} />
+        <Route exact path = '/feed' component = {Posts} />
+        <Route exact path = '/posts/:id' component = {Post} />
+        <Route exact path = '/post' component = {PostForm} />
         <div className= "container">
           <Route exact path = '/register' component = {Register} />
           <Route exact path = '/login' component = {Login} />

@@ -47,7 +47,7 @@ class Login extends Component {
   // when Login Component receives new data(into this.props), this function will be invoked
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/posts')
+      this.props.history.push('/feed')
     }
 
     if (this.props.errors) {
