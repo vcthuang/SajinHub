@@ -215,13 +215,11 @@ Profile.propTypes = {
   removeFollowing: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  profiles: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   profile: state.profile,
   auth: state.auth,
-  profiles: state.profiles
 });
 
 export default connect (mapStateToProps, { getProfileByHandle, getAllProfiles, addFollowing, removeFollowing })(withRouter(Profile));
