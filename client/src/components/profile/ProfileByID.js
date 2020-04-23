@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -6,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByID , addFollowing, removeFollowing } from '../../actions/profileActions';
+import { getProfileByID, getAllProfiles, addFollowing, removeFollowing } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -14,6 +15,7 @@ import ProfileFollowers from './ProfileFollowers';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
+
 
 
 // Profile is loaded when the user click on avatar on profileList
@@ -39,7 +41,16 @@ class ProfileByID extends Component {
     if (this.props.match.params.userid) {
       this.props.getProfileByID(this.props.match.params.userid);
     }
+    // we need to get current user profile,
+    // and the easiet way to to find via Redux store Profiles
+    this.props.getAllProfiles();
   }
+
+  // Refresh when data changes
+  // when user id is changed, we need to fresh the page
+  componentWillReceiveProps(nextProps) {
+
+  } 
 
   onAddFollowing(userid) {
     this.props.addFollowing (userid);
@@ -51,8 +62,9 @@ class ProfileByID extends Component {
 
   render() {
     
-    const { profile, loading } = this.props.profile;
-
+    const { profile, loading, profiles } = this.props.profile;
+    const { user } = this.props.auth;
+    
     let profileContent;
     
     if (profile === null || loading) {
@@ -69,6 +81,40 @@ class ProfileByID extends Component {
           <i className="fas fa-camera" /> {interest}
         </div>
       ));
+
+      let subsButton;
+      // Can't subscribe to yourself
+      if (profile.user._id !== user.id) {
+        // Display subscribe or unsubscribe button
+        // Find the profile for current user
+        const currentUserProfile = profiles.find(p => p.user._id === user.id);
+        // Check if current user is following the profile user
+        const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
+
+        if (!found) {
+          subsButton = (
+            <button
+              onClick={this.onAddFollowing.bind(this, profile.user._id)}
+              className="btn btn-dark float-right"
+            ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+              Subscribe
+            </button>);
+        } else {
+          subsButton = (
+            <button
+              onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
+              className="btn btn-dark float-right"
+            ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
+              Unsubscribe
+            </button>);
+        }
+      } else {
+        subsButton = (
+          <div className="btn btn-dark float-right">
+            <i className="fas fa-user" style={{color:"red"}}></i>
+            Me
+          </div>);
+      }
 
       profileContent = (
         <div>
@@ -93,19 +139,7 @@ class ProfileByID extends Component {
                   <small className="card-text">Royal member since&nbsp;
                     <Moment format="YYYY/MM/DD">{profile.joinDate}</Moment>
                   </small>
-
-                  <button
-                    onClick={this.onAddFollowing.bind(this, profile.user._id)}
-                    className="btn btn-dark float-right"
-                  ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
-                    Subscribe
-                  </button>
-                  <button
-                    onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
-                    className="btn btn-dark float-right"
-                  ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
-                    Unsubscribe
-                  </button>
+                  {subsButton}
                 </div>
                             
                 <div className="card-title d-flex flex-wrap justify-content-center align-items-center pt-3">
@@ -176,13 +210,18 @@ class ProfileByID extends Component {
 
 ProfileByID.propTypes = {
   getProfileByID: PropTypes.func.isRequired,
+  getAllProfiles: PropTypes.func.isRequired,
   addFollowing: PropTypes.func.isRequired,
   removeFollowing: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  profiles: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth,
+  profiles: state.profiles
 });
 
-export default connect (mapStateToProps, { getProfileByID, addFollowing, removeFollowing })(ProfileByID);
+export default connect (mapStateToProps, { getProfileByID, getAllProfiles, addFollowing, removeFollowing })(withRouter(ProfileByID));

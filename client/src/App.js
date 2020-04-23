@@ -76,9 +76,8 @@ function App() {
             <PrivateRoute exact path= "/profile" component= {ProfileHome} />
           </Switch>
           <Switch>
-            <PrivateRoute exact strict path= "/profile/user/:user" component= {ProfileByID} />
+            <PrivateRoute exact strict path= "/profile/user/:userid" component= {ProfileByID} />
           </Switch>
-
           <Switch>
             <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
           </Switch>

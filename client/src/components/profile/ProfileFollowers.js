@@ -18,8 +18,18 @@ class ProfileFollowers extends Component {
         </div>
       );
     } else {
-      followers = this.props.followers.map(profile => (
-        <RenderUser key={profile._id} profile={profile} />
+      followers = this.props.followers.map(follower => (
+        <div key={follower._id} className="card border-0 text-center col-md-2">
+          <div className="card-body bg-light"> 
+            <h5 className="card-title">{follower.name}</h5>
+            <Link to={`/profile/user/${follower.user}`} >
+              <img src={follower.avatar}
+                alt=""
+                style = {{width:'50px'}}
+                className="rounded-circle img-fluid" />
+            </Link>
+          </div>
+        </div>
       ));
     }
   
@@ -34,25 +44,6 @@ class ProfileFollowers extends Component {
         </div>
       </div>
     )
-  }
-}
-
-class RenderUser extends Component {
-  render() {
-    const { profile } = this.props;
-    return (
-      <div className="card border-0 text-center col-md-2">
-        <div className="card-body bg-light"> 
-          <h5 className="card-title">{profile.name}</h5>
-          <Link to={`/profile/user/${profile.user._id}`} >
-            <img src={profile.avatar}
-              alt=""
-              style = {{width:'50px'}}
-              className="rounded-circle img-fluid" />
-          </Link>
-        </div>
-      </div>
-    );
   }
 }
 

@@ -34,7 +34,7 @@ export const updateProfile = (profileData, history) => dispatch => {
     )
 };
 
-// 2. Get current profile
+// 2. Get profile for current user
 export const getCurrentProfile = () => dispatch => {
   dispatch(setProfileLoading());
   axios
@@ -133,7 +133,10 @@ export const addFollowing = (userid, history) => dispatch => {
   dispatch(setProfileLoading());
   axios
     .post(`/api/profile/followings/${userid}`)
-    .then (res => dispatch (getAllProfiles()))
+    .then (res => {
+      dispatch (getProfileByID(userid));
+      dispatch (getAllProfiles())
+    })
     .catch (err => history.push ('/profile'))
 };
 
@@ -142,7 +145,10 @@ export const removeFollowing = (userid, history) => dispatch => {
   dispatch(setProfileLoading());
   axios
     .delete(`/api/profile/followings/${userid}`)
-    .then (res => dispatch (getAllProfiles()))
+    .then (res => {
+      dispatch (getProfileByID(userid));
+      dispatch (getAllProfiles())
+    })
     .catch (err => history.push ('/profile'))
 };
 
