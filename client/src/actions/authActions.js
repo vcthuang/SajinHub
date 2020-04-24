@@ -73,12 +73,12 @@ export const logoutUser = () => dispatch => {
     type: SET_CURRENT_USER,
     payload: {}
   })
+
+   window.location.href = '/login';
 };
 
 export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS
   };
-
-  window.location.href = '/login';
-};
+}
