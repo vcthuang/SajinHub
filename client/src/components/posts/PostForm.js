@@ -1,7 +1,7 @@
 // Create a new Post
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { createPost } from '../../actions/postActions';
+//import { Link } from 'react-router-dom';
+import { createPost, getAllPosts } from '../../actions/postActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import TextAreaField from '../common/TextAreaField';
@@ -20,6 +20,12 @@ class PostForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.post !== prevProps.post) {
+      this.props.getAllPosts()
+      this.props.history.push('/feed')
+    }
+  }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
@@ -35,48 +41,47 @@ class PostForm extends Component {
 
     // send data to Redux Action
     this.props.createPost(newPost);
-
-    this.setState({ text: '', image: '' })
   }
 
   render() {
 
     const { errors } = this.props;
     return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
+      <div style={{ backgroundImage: 'linear-gradient(to bottom, #dfe9f3 0%, white 100%)'}}>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
 
-            <br/>
-            <p style={{ fontFamily: 'Comic Neue', textAlign: 'center', fontSize: '30px' }}>Let's share your post with friends !</p>
-            <br/>
+              <br />
+              <p className="display-4" style={{ textAlign: 'center', fontSize: '30px' }}>Share your post with friends ✨ </p>
+              <br />
 
-            <div className="card border-dark">
-              <div className="card-header">
-                <div>
-                  <br/>
-                  <form onSubmit={this.onSubmit}>
-                    <div className="input-group form-group flex-nowwrap">
+              <div className="border border-secondary">
+                <div className="card-header">
+                  <div>
+                    <br />
+                    <form onSubmit={this.onSubmit}>
+                      <div className="input-group form-group flex-nowwrap">
 
-                      {/* image section */}
+                        {/* image section */}
                         <div className="input-group-prepend">
                           <span className="input-group-text">https://</span>
                         </div>
-                      
-                      <input
-                        className={classnames("form-control", { "is-invalid": errors.image })}
-                        type="text"
-                        placeholder="Image URL"
-                        value={this.state.image}
-                        onChange={this.onChange}
-                        name="image"
-                        errors={errors.image}
-                      />
-                      <div className="invalid-feedback">{errors.image}</div>
-                    </div>
-                    <br/>
-                    
-                      {/* text section */} 
+
+                        <input
+                          className={classnames("form-control", { "is-invalid": errors.image })}
+                          type="text"
+                          placeholder="Image URL"
+                          value={this.state.image}
+                          onChange={this.onChange}
+                          name="image"
+                          errors={errors.image}
+                        />
+                        <div className="invalid-feedback">{errors.image}</div>
+                      </div>
+                      <br />
+
+                      {/* text section */}
                       <TextAreaField
                         placeholder=""
                         value={this.state.text}
@@ -87,17 +92,18 @@ class PostForm extends Component {
                       <button style={{ margin: '10px 5px 10px' }} type="submit" className="btn btn-dark">
                         Post
                       </button>
-                  </form>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-
+              {/* 
             <br/>
             <Link 
             to='/feed'
-            style={{ fontFamily: 'Comic Neue', fontSize: '25px', textDecoration: 'none' }}>
-              <p style={{ textAlign: 'center' }}> >> Back to Feed</p>
-            </Link>
+            style={{ fontSize: '19px', textDecoration: 'none' }}>
+            <p style={{ textAlign: 'center' }}> >> Back to Feed</p>
+            </Link> */}
+            </div>
           </div>
         </div>
       </div>
@@ -111,7 +117,8 @@ PostForm.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  errors: state.errors
+  errors: state.errors,
+  post: state.post
 })
 
-export default connect(mapStateToProps, { createPost })(PostForm);
+export default connect(mapStateToProps, { createPost, getAllPosts })(PostForm);

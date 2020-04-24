@@ -26,7 +26,7 @@ module.exports = validatePostInput = data => {
   }
 
   if (isEmpty(data.image)) {
-    errors.Image = 'Image field is required'
+    errors.image = 'Image field is required'
   }
 
   return {

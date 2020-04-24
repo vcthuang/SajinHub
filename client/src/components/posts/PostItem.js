@@ -10,33 +10,6 @@ import CommentForm from './CommentForm';
 
 class PostItem extends Component {
 
-  constructor() {
-    super();
-    this.state = {
-      text: '',
-      disabled: true
-    }
-
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value })
-  }
-
-  onSubmit() {
-
-    const postId  = this.props.post._id;
-
-    const editPost = {
-      text: this.state.text
-    }
-
-    // send data to Redux Action
-    this.props.editPost(postId, editPost);
-  }
-
-
   onClickLike(postId) {
     // send data to Redux Action
     this.props.likePost(postId)
@@ -71,7 +44,7 @@ class PostItem extends Component {
               {/* Header */}
 
                 {/* user's avatar */}
-                <Link to="/profile">
+                <Link to={{ pathname: `/profile/user/${post.user}` }}>
                   <img
                     className="rounded-circle d-none d-md-block"
                     height="33"
@@ -94,7 +67,7 @@ class PostItem extends Component {
                         className="btn-small btn-danger"
                         style={{ marginTop: '-5px' }}
                       >
-                        <i class="far fa-trash-alt"></i>
+                        <i className="far fa-trash-alt"></i>
                       </button>
                     </div>
                 ) : null }
@@ -140,7 +113,7 @@ class PostItem extends Component {
                 { post.likes.length > 1 ? ( 
                   <small>
                     <small style={{ fontSize: '17px' }}>and{' '}</small>
-                    <small style={{ fontSize: '19px', fontWeight: 'bold' }}>{post.likes.length}</small>
+                    <small style={{ fontSize: '18px', fontWeight: 'bold' }}>{post.likes.length}</small>
                     <small style={{ fontSize: '17px' }}>{' '}others</small>
                   </small>
                 ) : null}
@@ -158,7 +131,7 @@ class PostItem extends Component {
                     {/* display FIRST commentor's avatar & name & comment */} 
 
                     {/* commentor's avatar  */}
-                    <Link to="/profile">
+                    <Link to={{ pathname: `/profile/user/${post.comments.slice(-1)[0].user}` }}>
                       <img
                         className="rounded-circle d-none d-md-block"
                         style={{ marginTop: '15px', marginLeft: '10px' }}
@@ -182,7 +155,7 @@ class PostItem extends Component {
                     {/* display SECOND commentor's avatar & name & comment */}
 
                     {/* commentor's avatar  */}
-                    <Link to="/profile">
+                      <Link to={{ pathname: `/profile/user/${post.comments.slice(-2)[0].user}` }}>
                       <img
                         className="rounded-circle d-none d-md-block"
                         style={{ marginTop: '15px', marginLeft: '10px' }}
@@ -207,7 +180,7 @@ class PostItem extends Component {
                       to={{ pathname: `/posts/${post._id}` }}
                       style={{ color: 'grey', textDecoration: 'none' }}>
                       View all&nbsp;
-                      <small style={{ fontWeight: 'bold' }}> {post.comments.length}
+                      <small style={{ fontSize: '16px', fontWeight: 'bold' }}> {post.comments.length}
                       </small>
                       &nbsp;&nbsp;comments
                       <br />
@@ -272,7 +245,8 @@ PostItem.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 });
 
 export default connect(mapStateToProps, { likePost, deletePost })(PostItem);

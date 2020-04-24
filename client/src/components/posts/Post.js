@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropType from 'prop-types';
 
 import { getPost } from '../../actions/postActions';
@@ -40,6 +41,12 @@ class Post extends Component {
             { postContent }
           </div>
         </div>
+        <br/>
+        <Link
+          to='/feed'
+          style={{ fontSize: '19px', textDecoration: 'none' }}>
+          <p style={{ textAlign: 'center' }}> >> Back to Feed</p>
+        </Link>
       </div>
     )
   }
