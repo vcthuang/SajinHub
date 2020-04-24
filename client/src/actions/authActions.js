@@ -1,5 +1,5 @@
 // Redux Dispatcher type
-import { SET_CURRENT_USER, SET_ERRORS } from './types';
+import { SET_CURRENT_USER, SET_ERRORS, CLEAR_ERRORS } from './types';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 
@@ -9,6 +9,7 @@ import axios from 'axios';
 
 // when the user clicks submit button on the registration page, registerUser gets triggered
 export const registerUser = (userData, history) => dispatch => {
+  dispatch(clearErrors());
   
   // Make API call
   axios
@@ -28,6 +29,7 @@ export const registerUser = (userData, history) => dispatch => {
 
 // when the user clicks login button on the login page, loginUser gets triggered
 export const loginUser = userData => dispatch => {
+  dispatch(clearErrors());
   axios
   .post('/api/users/login', userData)
   .then(res => {
@@ -72,5 +74,11 @@ export const logoutUser = () => dispatch => {
     payload: {}
   })
 
-  window.location.href = '/login';
+   window.location.href = '/login';
 };
+
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
+}

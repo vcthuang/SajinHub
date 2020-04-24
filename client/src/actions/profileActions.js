@@ -8,6 +8,7 @@
 // 7. AddFollowing(userID, history)
 // 8. RemoveFollowing(userID, history)
 // 9. setProfileLoading
+// 10. Clear errors
 
 // Make calls to server
 import axios from 'axios';
@@ -18,11 +19,13 @@ import {
   GET_PROFILE,
   GET_PROFILES,
   PROFILE_LOADING,
-  SET_ERRORS
+  SET_ERRORS,
+  CLEAR_ERRORS
 } from './types';
 
 // 1. Create Profile
 export const updateProfile = (profileData, history) => dispatch => {
+  dispatch(clearErrors());
   axios
     .post ('/api/profile', profileData)
     .then (res => history.push ('/profile'))
@@ -157,4 +160,11 @@ export const setProfileLoading = () => {
   return {
     type: PROFILE_LOADING
   }
+};
+
+// 10. Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };

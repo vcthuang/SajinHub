@@ -18,7 +18,8 @@ class ProfileItem extends Component {
         <div className="card text-center mb-3">
           <h5 className="card-header">{profile.user.name}</h5>
           <div className="card-body bg-light"> 
-            <Link to={`/profile/${profile.handle}`} >
+            <Link to={`/profile/${profile.handle}`} > 
+            { /*<Link to={`/profile/user/${profile.user._id}`} >*/}
               <img src={profile.user.avatar}
                 alt=""
                 className="rounded-circle img-fluid" />

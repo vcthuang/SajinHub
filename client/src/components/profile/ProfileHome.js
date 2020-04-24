@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 
 // Redux action
 import { getCurrentProfile, deleteAccount } from '../../actions/profileActions';
+import { getAllPosts } from '../../actions/postActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -15,6 +16,7 @@ import ProfileFollowers from './ProfileFollowers';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
+import UserPosts from '../posts/UserPosts';
 
 // ProfileHome is loaded when the user click on avatar on the navbar
 // If the user has a profile, then
@@ -36,7 +38,8 @@ class ProfileHome extends Component {
   // When the page is loading
   // Get profile from Redux store
   componentDidMount() {
-    this.props.getCurrentProfile();   
+    this.props.getCurrentProfile();
+    this.props.getAllPosts();
   }
 
   // When Delete button is click on Profile
@@ -139,7 +142,7 @@ class ProfileHome extends Component {
                       }}
                       className="btn btn-dark mx-3"
                     ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                      Followings{'\u00A0'}{'\u00A0'}
+                      Following{'\u00A0'}{'\u00A0'}
                       <span className="badge badge-light mx-1 ">{profile.followings.length}</span>
                     </button>
                     <button
@@ -203,6 +206,7 @@ class ProfileHome extends Component {
           <ProfileFollowings followings = {profile.followings}/>}
         {this.state.displayFollowers && 
           <ProfileFollowers followers = {profile.followers}/>}
+
       </div>
     )
   }
@@ -213,11 +217,14 @@ ProfileHome.propTypes = {
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  getAllPosts: PropTypes.func.isRequired,
+  post: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  profile: state.profile
+  profile: state.profile,
+  post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(ProfileHome);
+export default connect (mapStateToProps, { getCurrentProfile, deleteAccount, getAllPosts })(ProfileHome);

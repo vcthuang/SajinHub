@@ -15,7 +15,7 @@ import ProfileFollowers from './ProfileFollowers';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
-
+import UserPosts from '../posts/UserPosts';
 
 
 // Profile is loaded when the user click on avatar on profileList
@@ -38,19 +38,26 @@ class ProfileByID extends Component {
   }
 
   componentDidMount() {
-    if (this.props.match.params.userid) {
-      this.props.getProfileByID(this.props.match.params.userid);
-    }
     // we need to get current user profile,
     // and the easiet way to to find via Redux store Profiles
     this.props.getAllProfiles();
+
+    if (this.props.match.params.userid) {
+      this.props.getProfileByID(this.props.match.params.userid);
+    }
   }
 
   // Refresh when data changes
   // when user id is changed, we need to fresh the page
-  componentWillReceiveProps(nextProps) {
-
-  } 
+  componentDidUpdate = (prevProps) => {
+    if(this.props.match.params.userid !== prevProps.match.params.userid) {
+      this.setState({
+        displayFollowings: false,
+        displayFollowers: false
+      });
+      this.props.getProfileByID(this.props.match.params.userid);
+   };
+  };
 
   onAddFollowing(userid) {
     this.props.addFollowing (userid);
@@ -171,7 +178,7 @@ class ProfileByID extends Component {
                     }}
                     className="btn btn-dark mx-3"
                   ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                    Followings{'\u00A0'}{'\u00A0'}
+                    Following{'\u00A0'}{'\u00A0'}
                     <span className="badge badge-light mx-1">{profile.followings.length}</span>
                   </button>
                   <button
@@ -203,6 +210,7 @@ class ProfileByID extends Component {
           <ProfileFollowings followings = {profile.followings}/>}
         {this.state.displayFollowers && 
           <ProfileFollowers followers = {profile.followers}/>}
+        <UserPosts />
       </div>
     )
   }
