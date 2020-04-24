@@ -94,7 +94,7 @@ class Navbar extends Component {
 
     return (
       // Bootstrap Navbar
-      <nav className="navbar navbar-expand-sm navbar-light bg-light nav-main" >
+      <nav className="sticky-top navbar navbar-expand-sm navbar-light bg-light nav-main" >
         <div className="container">
           {/* Have logo on the left */}
           <Link className="navbar-brand" to="/">SajinHub</Link>

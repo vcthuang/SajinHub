@@ -35,7 +35,7 @@ class CommentItem extends Component {
     this.props.addReply(postId, commentId, newReply);
   }
 
-  // authorized users can delete their comments
+  // authorized commentors can delete their comments
   onClickDelete(postId, commentId) {
     this.props.deleteComment(postId, commentId)
   }
@@ -49,26 +49,27 @@ class CommentItem extends Component {
         <div className="row">
           <div className="d-flex justify-content" style={{ marginTop: '-5px', marginBottom: '-25px' }}>
            
-            {/* user's avatar */}
-            <Link to="/profile">
+            {/* commentor's avatar */}
+            <Link to={{ pathname: `/profile/user/${comment.user}` }}>
               <img
                 className="rounded-circle d-none d-md-block"
                 style={{ marginTop: '13px', marginLeft: '10px' }}
                 height="30"
                 width="30"
                 src={comment.avatar}
-                alt="" />
+                alt="" 
+                />
             </Link>
 
-            {/* user's name */}
+            {/* commentor's name */}
             <p style={{ fontWeight: 'bold', marginLeft: '10px', marginTop: '12px' }}>{comment.name}</p>
 
-            {/* user's text */}
+            {/* commentor's text */}
             <p style={{ marginLeft: '10px', marginTop: '12px' }}>{comment.text}</p>
           
             {/* reply to the comment (using bootstrap modal) */}
             <button type="button" className="btn" data-toggle="modal" data-target="#reply" style={{ fontSize: '15px', color: 'grey', fontWeight: '700', border: 'none', marginTop: '-8px', marginLeft: '10px' }}>
-              Reply  
+              Reply
             </button>
 
             <div className="modal fade" id="reply" tabIndex="-1" role="dialog" aria-hidden="true">
@@ -76,7 +77,7 @@ class CommentItem extends Component {
                 <div className="modal-content">
 
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"
-                  style={{ marginLeft: '440px', marginTop: '5px' }}>
+                    style={{ marginLeft: '440px', marginTop: '5px' }}>
                     <span aria-hidden="true">&times;</span>
                   </button>
 
