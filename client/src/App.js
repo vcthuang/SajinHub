@@ -70,28 +70,33 @@ function App() {
     <Router>
         <Navbar />
         <Route exact path = '/' component = {Landing} />
-        <Route exact path = '/feed' component = {Posts} />
-        <Route exact path = '/posts/:id' component = {Post} />
-        <Route exact path = '/post' component = {PostForm} />
-        <div className= "container">
-          <Route exact path = '/register' component = {Register} />
-          <Route exact path = '/login' component = {Login} />
-          <Route exact path = '/profiles' component = {ProfileList} />
-          <Route exact strict path= "/profile/:handle" component={Profile} />
-          
-          <Switch>
-            <PrivateRoute exact path= "/profile" component= {ProfileHome} />
-          </Switch>
-          <Switch>
-            <PrivateRoute exact strict path= "/profile/user/:userid" component= {ProfileByID} />
-          </Switch>
-          <Switch>
-            <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
-          </Switch>
-          <Switch>
-            <PrivateRoute exact path= "/profile-update" component= {ProfileUpdate} />
-          </Switch>
-        </div>
+        <Route exact path = '/register' component = {Register} />
+        <Route exact path = '/login' component = {Login} />
+        <Route exact path = '/profiles' component = {ProfileList} />
+        <Route exact strict path= "/profile/:handle" component={Profile} />
+        
+        <Switch>
+          <PrivateRoute exact path= "/profile" component= {ProfileHome} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact strict path= "/profile/user/:userid" component= {ProfileByID} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path= "/profile-update" component= {ProfileUpdate} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/feed" component={Posts} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/posts/:id" component={Post} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/post" component={PostForm} />
+        </Switch>
+
         <Footer />
     </Router>
   </Provider>

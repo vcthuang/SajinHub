@@ -79,4 +79,6 @@ export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS
   };
+
+  window.location.href = '/login';
 };
