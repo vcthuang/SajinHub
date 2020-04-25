@@ -64,7 +64,7 @@ class Login extends Component {
           <div className="col-md-6">
             <div className="login-main text-center">
               <form onSubmit={ this.onSubmit } className="form-signin">
-                <i className="fas fa-sign-in-alt"></i>
+                {/* <i className="fas fa-sign-in-alt"></i> */}
                 <h2 className="login-h2">Login</h2>
                 <InputField 
                   type="email"

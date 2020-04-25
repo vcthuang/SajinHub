@@ -78,7 +78,7 @@ class Register extends Component {
               <form onSubmit = { this.onSubmit } className="form-register">
                 
                 {/* Icon & title */}
-                <i className="fas fa-user-plus"></i>
+                {/* <i className="fas fa-user-plus"></i> */}
                 <h2 className = "Register-h2">Register</h2>
                 
                 {/* Name */}

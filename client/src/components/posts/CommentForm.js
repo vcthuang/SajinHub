@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addComment } from '../../actions/postActions';
+import TextField from '@material-ui/core/TextField';
 
 class CommentForm extends Component {
 
@@ -43,23 +44,23 @@ class CommentForm extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <div class="input-group">
-          <input 
-          type="text" 
-          className="form-control" 
-          placeholder="Comment..." 
-          value={this.state.text}
-          onChange={this.onChange}
-          name="text"
-          error={errors.text}
+        <div className="input-group">
+          <TextField
+            type="text"
+            className="form-control"
+            placeholder="Add a comment..."
+            value={this.state.text}
+            onChange={this.onChange}
+            name="text"
+            error={errors.text}
           />
 
-          <div class="input-group-append">
-            <button 
-            className="btn btn-secondary" 
-            type="submit"
-            disabled={this.state.text.length > 3 ? false : true }>
-            Add
+          <div className="input-group-append">
+            <button
+              className="btn"
+              type="submit"
+              disabled={this.state.text.length > 3 ? false : true}>
+              Add
             </button>
           </div>
         </div>

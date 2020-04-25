@@ -1,6 +1,7 @@
 // Each Reply
 
 import React, { Component } from 'react';
+import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTyeps from 'prop-types';
@@ -20,37 +21,43 @@ class ReplyItem extends Component {
 
     return (
 
-      <div className="d-flex justify-content" style={{ marginTop: '-20px' }}>
-        
+      <div className="d-flex justify-content" style={{ marginTop: '-30px', marginLeft: '30px' }}>
+
         {/* replier's avatar */}
         <Link to="/profile">
           <img
             className="rounded-circle d-none d-md-block"
-            style={{ marginTop: '13px', marginLeft: '10px' }}
-            height="30"
-            width="30"
+            style={{ marginTop: '16px', marginLeft: '10px' }}
+            height="20"
+            width="20"
             src={reply.avatar}
-            alt="Avatar not found" 
-          />
+            alt="Avatar not found" />
         </Link>
 
         {/* replier's name */}
-        <p style={{ fontWeight: 'bold', marginLeft: '10px', marginTop: '12px' }}>{reply.name}</p>
+        <p style={{ fontSize: '18px', fontWeight: 'bold', marginLeft: '10px', marginTop: '12px' }}>{reply.name}</p>
 
         {/* replier's text */}
-        <p style={{ marginLeft: '10px', marginTop: '12px' }}>{reply.text}</p>
+        <p style={{ fontSize: '18px', marginLeft: '10px', marginTop: '12px' }}>{reply.text}</p>
+
+        {/* timestamp */}
+        <Moment
+          fromNow
+          date={reply.date}
+          style={{ fontSize: '12px', marginLeft: '10px', marginTop: '18px' }}>
+        </Moment>
 
         {/* authorized replier can delete their replies */}
-        {reply.user === auth.user.id ? (
+        { reply.user === auth.user.id ? (
           <button
             onClick={this.onClickDelete.bind(this, postId, commentId, reply._id)}
             type="button"
             className="btn"
-            style={{ color: 'red', marginBottom: '5px' }}
+            style={{ fontSize:'15px', color: 'red', marginBottom: '4px' }}
           >
             <i className="far fa-times-circle" />
           </button>
-        ) : null}
+        ) : null }
       </div>
     )
   }

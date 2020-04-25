@@ -1,6 +1,5 @@
 // Create a new Post
 import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
 import { createPost, getAllPosts } from '../../actions/postActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -53,11 +52,13 @@ class PostForm extends Component {
             <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
 
               <br />
-              <p className="display-4" style={{ textAlign: 'center', fontSize: '30px' }}>Share your post with friends ✨ </p>
+              <br/>
+              <p className="display-4" style={{ textAlign: 'center', fontSize: '30px' }}>Share your post with friends ✨</p>
+              
               <br />
-
-              <div className="border border-secondary">
-                <div className="card-header">
+              <div className="card h-100 border-0 shadow">
+                <div className="card-body" style={{
+                  backgroundColor: '#f9f9f9' }}>
                   <div>
                     <br />
                     <form onSubmit={this.onSubmit}>
@@ -96,13 +97,6 @@ class PostForm extends Component {
                   </div>
                 </div>
               </div>
-              {/* 
-            <br/>
-            <Link 
-            to='/feed'
-            style={{ fontSize: '19px', textDecoration: 'none' }}>
-            <p style={{ textAlign: 'center' }}> >> Back to Feed</p>
-            </Link> */}
             </div>
           </div>
         </div>
