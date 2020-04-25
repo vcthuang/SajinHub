@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import PropType from 'prop-types';
 import { likePost, deletePost } from '../../actions/postActions';
-import CommentForm from './CommentForm';
 
 class PostItem extends Component {
 
@@ -37,11 +36,12 @@ class PostItem extends Component {
 
     return (
       <div className="card border-secondary mb-4 rounded-0">
+
+        {/* Header */}
         <div className="card-header bg-light rounded-0">           
           <div className="container">
             <div className="row" style={{ marginRight: '10px' }}>
               <div className="col-11 d-flex">
-              {/* Header */}
 
                 {/* user's avatar */}
                 <Link to={{ pathname: `/profile/user/${post.user}` }}>
@@ -98,7 +98,7 @@ class PostItem extends Component {
                 style={{ outline: 'none', display: 'block', marginLeft: '-10px', marginTop: '-20px' }}
                 onClick={this.onClickLike.bind(this, post._id)}
               >
-                <i className={this.checkUserLike(post.likes) ? "fas fa-heart && text-danger && fa-lg" : "far fa-heart && fa-lg"}/>
+                <i className={this.checkUserLike(post.likes) ? "fas fa-heart && text-danger && fa-lg" : "far fa-heart && fa-lg"} />
               </button>
 
               {/* like status(counts) */}
@@ -122,7 +122,6 @@ class PostItem extends Component {
               {/* text section */}
               <p className="card-text" style={{ fontSize: '23px' }}>{post.text}</p> 
 
-             
               { post.comments.length > 0 ? (
 
                 <div style={{ fontSize: '17px', marginTop: '-20px'}}>
@@ -146,6 +145,14 @@ class PostItem extends Component {
 
                     {/* commentor's comment */}
                     <p style={{ marginLeft: '10px', marginTop: '12px' }}>{post.comments.slice(-1)[0].text}</p>
+
+                    {/* timestamp */}
+                    &nbsp;&nbsp;&nbsp;
+                    <Moment
+                      fromNow
+                      date={post.comments.slice(-1)[0].date}
+                      style={{ fontSize: '12px', marginLeft: '10px', marginTop:  '17px' }}>
+                    </Moment>
                   </div>
 
                  
@@ -155,14 +162,14 @@ class PostItem extends Component {
                     {/* display SECOND commentor's avatar & name & comment */}
 
                     {/* commentor's avatar  */}
-                      <Link to={{ pathname: `/profile/user/${post.comments.slice(-2)[0].user}` }}>
-                      <img
-                        className="rounded-circle d-none d-md-block"
-                        style={{ marginTop: '15px', marginLeft: '10px' }}
-                        height="20"
-                        width="20"
-                        src={post.comments.slice(-2)[0].avatar}
-                        alt="" />
+                    <Link to={{ pathname: `/profile/user/${post.comments.slice(-2)[0].user}` }}>
+                    <img
+                      className="rounded-circle d-none d-md-block"
+                      style={{ marginTop: '15px', marginLeft: '10px' }}
+                      height="20"
+                      width="20"
+                      src={post.comments.slice(-2)[0].avatar}
+                      alt="" />
                     </Link>
 
                     {/* commentor's name  */}
@@ -170,21 +177,30 @@ class PostItem extends Component {
 
                     {/* commentor's comment */}
                     <p style={{ marginLeft: '10px', marginTop: '12px' }}>{post.comments.slice(-2)[0].text}</p>
+
+                    {/* timestamp */}
+                    &nbsp;&nbsp;&nbsp;
+                    <Moment
+                      fromNow
+                      date={post.comments.slice(-2)[0].date}
+                        style={{ fontSize: '12px', marginLeft: '10px', marginTop: '17px' }}>
+                    </Moment>
                   </div>
                   ) : null }
 
+
                 {/* comment status(counts) */}
                 <div>
-                    {post.comments.length > 2 ? 
-                    <Link
-                      to={{ pathname: `/posts/${post._id}` }}
-                      style={{ color: 'grey', textDecoration: 'none' }}>
-                      View all&nbsp;
-                      <small style={{ fontSize: '16px', fontWeight: 'bold' }}> {post.comments.length}
-                      </small>
-                      &nbsp;&nbsp;comments
-                      <br />
-                    </Link> : null }
+                  {post.comments.length > 2 ? 
+                  <Link
+                    to={{ pathname: `/posts/${post._id}` }}
+                    style={{ color: 'grey', textDecoration: 'none' }}>
+                    View all&nbsp;
+                    <small style={{ fontSize: '16px', fontWeight: 'bold' }}> {post.comments.length}
+                    </small>
+                    &nbsp;&nbsp;comments
+                    <br />
+                  </Link> : null }
                 </div>
               </div>
               ) : null }
@@ -202,32 +218,11 @@ class PostItem extends Component {
                 <Link
                   to={{ pathname: `/posts/${post._id}` }}
                   style={{ color: '#1a1a1e', textDecoration: 'none' }}>
-                  Leave comment
-              </Link>
+                  Leave comments
+                </Link>
               </div>
             </div>   
-
-          ) : (
-            <div>
-              {/* without showing details */}
-              {/* text section */}
-              <p className="card-text">{post.text}</p>
-
-              {/* timestamp */}
-              <Moment
-                fromNow
-                date={post.date}
-                style={{ fontSize: '15.5px' }}>
-              </Moment>
-              <br />
-              <br />
-
-              {/* comment form */}
-              <div className="">
-                <CommentForm postId={post._id} />
-              </div>
-            </div>       
-          ) }
+          ) : null }
         </div>
       </div>
     )

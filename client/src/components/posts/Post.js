@@ -2,15 +2,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropType from 'prop-types';
 
 import { getPost } from '../../actions/postActions';
 
-import PostItem from './PostItem';
-import CommentFeed from './CommentFeed';
-
 import Spinner from '../common/Spinner';
+import PostCommentSection from './PostCommentSection';
 
 class Post extends Component {
 
@@ -28,25 +25,18 @@ class Post extends Component {
       postContent = <Spinner />
     } else {
       postContent = (
-        <div>
-          <PostItem post={post} showDetails={false} />
-          {post.comments ? <CommentFeed comments={post.comments} postId={post._id} /> : null}
+        <div className="container">
+          <div className="row justify-content-between" style={{ marginTop: '25px' }}>
+            <div className="col-12">
+              <PostCommentSection post={post} />
+            </div>
+          </div>
         </div>
       )
     }
     return (
       <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
-            { postContent }
-          </div>
-        </div>
-        <br/>
-        <Link
-          to='/feed'
-          style={{ fontSize: '19px', textDecoration: 'none' }}>
-          <p style={{ textAlign: 'center' }}> >> Back to Feed</p>
-        </Link>
+        { postContent }
       </div>
     )
   }
