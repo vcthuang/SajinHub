@@ -43,9 +43,9 @@ class ProfileUpdate extends Component {
     }
 
     // If we are able to retrieve user profile from Redux store
-    if (nextProps.profile.profile) {
+    if (nextProps.profile.userProfile) {
 
-      const profile = nextProps.profile.profile;
+      const profile = nextProps.profile.userProfile;
       
       // Bring Interests array back to CSV
       let interestsCSV= profile.interests.join(',');

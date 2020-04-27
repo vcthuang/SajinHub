@@ -34,13 +34,15 @@ class ProfileFollowers extends Component {
     }
   
     return (
-      <div className="card">
-        <h5 className="card-header">
-          <i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-            Followers
-        </h5>
-        <div className="card-group">
-          {followers}
+      <div className="row">
+        <div className="card col-sm-12">
+          <h5 className="card-header">
+            <i className="fa fa-heart pr-2" style={{color:"red"}}></i>
+              Followers
+          </h5>
+          <div className="card-group">
+            {followers}
+          </div>
         </div>
       </div>
     )

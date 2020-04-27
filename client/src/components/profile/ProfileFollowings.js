@@ -34,25 +34,19 @@ class ProfileFollowings extends Component {
     }
   
     return (
-      <div className="card">
-        <h5 className="card-header">
-          <i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-            Followings
-        </h5>
-        <div className="card-group">
-          {followings}
+      <div className="row">
+        <div className="card col-sm-12">
+          <h5 className="card-header">
+            <i className="fa fa-heart pr-2" style={{color:"red"}}></i>
+              Following
+          </h5>
+          <div className="card-group">
+            {followings}
+          </div>
         </div>
       </div>
     )
   }
 }
 
-ProfileFollowings.propTypes = {
-  profile: PropTypes.object.isRequired
-}
-
-const mapStateToProps = state => ({
-  profile: state.profile,
-});
-
-export default connect (mapStateToProps, {}) (withRouter(ProfileFollowings));
+export default withRouter(ProfileFollowings);
