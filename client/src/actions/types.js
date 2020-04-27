@@ -11,6 +11,7 @@ export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const POST_LOADING = "POST_LOADING"
 export const GET_ALL_POSTS = "GET_ALL_POSTS";
 export const GET_POST = "GET_POST";
+export const GET_USER_POSTS = "GET_USER_POSTS";
 export const CREATE_POST = "CREATE_POST";
 export const DELETE_POST = "DELETE_POST";
 
