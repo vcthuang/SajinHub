@@ -7,15 +7,21 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByID, getAllProfiles, addFollowing, removeFollowing } from '../../actions/profileActions';
+import { 
+  getCurrentProfile, 
+  getProfileByID, 
+  getAllProfiles, 
+  addFollowing, 
+  removeFollowing } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
 import ProfileFollowers from './ProfileFollowers';
+import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
-import UserPosts from '../posts/UserPosts';
+
 
 
 // Profile is loaded when the user click on avatar on profileList
@@ -34,29 +40,36 @@ class ProfileByID extends Component {
     this.state = {
       displayFollowings: false,
       displayFollowers: false,
+      displayPosts: false
     }
   }
 
-  componentDidMount() {
-    // we need to get current user profile,
-    // and the easiet way to to find via Redux store Profiles
-    this.props.getAllProfiles();
+  componentDidMount() { 
+    // if (isEmpty(this.props.profile.profiles))
+    //   this.props.getAllProfiles();
+    
+    // Get current user's profile
+    if (isEmpty(this.props.profile.userProfiles))
+      this.props.getCurrentProfile();
 
-    if (this.props.match.params.userid) {
-      this.props.getProfileByID(this.props.match.params.userid);
-    }
+    // Get profile 
+    //if (this.props.match.params.userid) {
+    this.props.getProfileByID(this.props.match.params.userid);
+  
   }
 
   // Refresh when data changes
   // when user id is changed, we need to fresh the page
   componentDidUpdate = (prevProps) => {
     if(this.props.match.params.userid !== prevProps.match.params.userid) {
+      this.props.getProfileByID(this.props.match.params.userid);
+     
       this.setState({
         displayFollowings: false,
-        displayFollowers: false
-      });
-      this.props.getProfileByID(this.props.match.params.userid);
-   };
+        displayFollowers: false,
+        displayPosts: true
+      });   
+    }
   };
 
   onAddFollowing(userid) {
@@ -69,9 +82,8 @@ class ProfileByID extends Component {
 
   render() {
     
-    const { profile, loading, profiles } = this.props.profile;
-    const { user } = this.props.auth;
-    
+    const { profile, loading, userProfile } = this.props.profile;
+        
     let profileContent;
     
     if (profile === null || loading) {
@@ -91,22 +103,13 @@ class ProfileByID extends Component {
 
       let subsButton;
       // Can't subscribe to yourself
-      if (profile.user._id !== user.id) {
+      if (profile.user._id !== userProfile.user._id) {
         // Display subscribe or unsubscribe button
-        // Find the profile for current user
-        const currentUserProfile = profiles.find(p => p.user._id === user.id);
+        
         // Check if current user is following the profile user
-        const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
+        const found = userProfile.followings.find(following => following.user === profile.user._id);
 
-        if (!found) {
-          subsButton = (
-            <button
-              onClick={this.onAddFollowing.bind(this, profile.user._id)}
-              className="btn btn-dark float-right"
-            ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
-              Subscribe
-            </button>);
-        } else {
+        if (found) {
           subsButton = (
             <button
               onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
@@ -114,17 +117,27 @@ class ProfileByID extends Component {
             ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
               Unsubscribe
             </button>);
+        } else {
+          subsButton = (
+            <button
+              onClick={this.onAddFollowing.bind(this, profile.user._id)}
+              className="btn btn-dark float-right"
+            ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+              Subscribe
+            </button>);
         }
       } else {
         subsButton = (
           <div className="btn btn-dark float-right">
-            <i className="fas fa-user" style={{color:"red"}}></i>
+            <i className="fas fa-user pr-2" style={{color:"red"}}></i>
             Me
           </div>);
       }
 
       profileContent = (
         <div>
+          <div>Current User: {userProfile.user.name}{userProfile.user._id}</div>
+          <div>Profile: {profile.user.name}{profile.user._id}</div>
           <div className="row">
             {/* Leftside contains avatar, location, website */}
             <div className="col-sm-4 card">
@@ -193,6 +206,18 @@ class ProfileByID extends Component {
                     Followers{'\u00A0'}{'\u00A0'}
                     <span className="badge badge-light mx-1">{profile.followers.length}</span>
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.setState(prevState => ({
+                        displayPosts: !prevState.displayPosts
+                      }));
+                    }}
+                    className="btn btn-dark mx-3"
+                  ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
+                    Followers{'\u00A0'}{'\u00A0'}
+                    <span className="badge badge-light mx-1">{profile.followers.length}</span>
+                  </button>
                 </div>
               </div>               
             </div>
@@ -205,29 +230,31 @@ class ProfileByID extends Component {
       <div className="profileByID">
         <div className="container">
           {profileContent}
+          {this.state.displayFollowings && 
+            <ProfileFollowings followings = {profile.followings}/>}
+          {this.state.displayFollowers && 
+            <ProfileFollowers followers = {profile.followers}/>}
+          <div className="row">
+          {this.state.displayPosts &&   
+            <UserPosts userid = {profile.user._id}/>}
+          </div>
         </div>
-        {this.state.displayFollowings && 
-          <ProfileFollowings followings = {profile.followings}/>}
-        {this.state.displayFollowers && 
-          <ProfileFollowers followers = {profile.followers}/>}
-        <UserPosts />
       </div>
     )
   }
 }
 
 ProfileByID.propTypes = {
+  getCurrentProfile: PropTypes.func.isRequired,
   getProfileByID: PropTypes.func.isRequired,
   getAllProfiles: PropTypes.func.isRequired,
   addFollowing: PropTypes.func.isRequired,
   removeFollowing: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
-  auth: state.auth,
+  profile: state.profile
 });
 
-export default connect (mapStateToProps, { getProfileByID, getAllProfiles, addFollowing, removeFollowing })(withRouter(ProfileByID));
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, getAllProfiles, addFollowing, removeFollowing })(withRouter(ProfileByID));

@@ -7,15 +7,20 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getProfileByHandle, getAllProfiles, addFollowing, removeFollowing } from '../../actions/profileActions';
+import { 
+  getCurrentProfile, 
+  getProfileByHandle, 
+  addFollowing, 
+  removeFollowing } from '../../actions/profileActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
 import ProfileFollowers from './ProfileFollowers';
+import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
-import UserPosts from '../posts/UserPosts';
+
 
 
 // Profile is loaded when the user click on avatar on profileList
@@ -37,14 +42,16 @@ class Profile extends Component {
     this.state = {
       displayFollowings: false,
       displayFollowers: false,
+      displayPosts: false
     }
   }
 
   // Get profile from Redux store when the component is loading
   componentDidMount() {
-    // we need to get current user profile if the user is logged in
-    // and the easiet way to to find via Redux store Profiles
-    this.props.getAllProfiles();
+
+    // Get current user's profile
+    if (this.props.auth.isAuthenticated)
+      this.props.getCurrentProfile();
 
     if (this.props.match.params.handle) {
       this.props.getProfileByHandle(this.props.match.params.handle);
@@ -200,20 +207,23 @@ class Profile extends Component {
       <div className="profile">
         <div className="container">
           {profileContent}
+          {this.state.displayFollowings && 
+            <ProfileFollowings followings = {profile.followings}/>}
+          {this.state.displayFollowers && 
+            <ProfileFollowers followers = {profile.followers}/>}
+          <div className="row">
+          {this.state.displayPosts &&   
+            <UserPosts userid = {profile.user._id}/>}
+          </div>
         </div>
-        {this.state.displayFollowings && 
-          <ProfileFollowings followings = {profile.followings}/>}
-        {this.state.displayFollowers && 
-          <ProfileFollowers followers = {profile.followers}/>}
-        <UserPosts />
       </div>
     )
   }
 }
 
 Profile.propTypes = {
+  getCurrentProfile: PropTypes.func.isRequired,
   getProfileByHandle: PropTypes.func.isRequired,
-  getAllProfiles: PropTypes.func.isRequired,
   addFollowing: PropTypes.func.isRequired,
   removeFollowing: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
@@ -225,4 +235,4 @@ const mapStateToProps = state => ({
   auth: state.auth,
 });
 
-export default connect (mapStateToProps, { getProfileByHandle, getAllProfiles, addFollowing, removeFollowing })(withRouter(Profile));
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByHandle, addFollowing, removeFollowing })(withRouter(Profile));

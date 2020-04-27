@@ -12,15 +12,23 @@ import PostFeed from './PostFeed';
 class UserPosts extends Component {
 
   componentDidMount() {
-    this.props.getAllPosts();
+    if ((this.props.post.posts).length === 0)
+      this.props.getAllPosts();
   }
+
+  componentDidUpdate = (prevProps) => {
+    
+  };
 
   render() {
     
     const { posts, loading } = this.props.post;
-    const { profile } = this.props.profile;
+    //const { profile } = this.props;
 
-    let userPosts = posts.filter (post => post.user === profile.user._id);
+    let userPosts;
+    if (this.props.userid) {
+      userPosts = posts.filter (post => post.user === this.props.userid);
+    } 
     
     let postContent;
 
@@ -28,24 +36,21 @@ class UserPosts extends Component {
       postContent = <Spinner />
     } else {
       postContent = (
-        <PostFeed posts={userPosts} />
-      )
-    }
-
-    return (
-      
-      <div className="card">
-        <h5 className="card-header">
+        <div className="card-body justify-content-center">
+          <h5 className="card-header">
           <i className="fas fa-edit pr-2" style={{color:"red"}}></i>
             Recent Posts
-        </h5>
-        <div className="row card-body justify-content-center">
-          <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
-              <br/>
-              { postContent }
-          </div>
+          </h5>
+          <PostFeed posts={userPosts} />
         </div>
-      </div>
+      );
+    }
+
+    return (     
+      
+        <div className="card col-sm-12">
+          { postContent }
+        </div>
       
     )
   }
@@ -54,12 +59,12 @@ class UserPosts extends Component {
 UserPosts.propTypes = {
   post: PropTypes.object.isRequired,
   getAllPosts: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  //profile: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   post: state.post,
-  profile: state.profile
+  //profile: state.profile
 });
 
 export default connect(mapStateToProps, { getAllPosts })(UserPosts);

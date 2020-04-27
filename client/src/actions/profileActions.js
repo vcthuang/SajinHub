@@ -17,11 +17,14 @@ import axios from 'axios';
 import {
   SET_CURRENT_USER,
   GET_PROFILE,
+  GET_USER_PROFILE,
   GET_PROFILES,
   PROFILE_LOADING,
   SET_ERRORS,
   CLEAR_ERRORS
 } from './types';
+
+import { logoutUser } from '../actions/authActions';
 
 // 1. Create Profile
 export const updateProfile = (profileData, history) => dispatch => {
@@ -44,13 +47,13 @@ export const getCurrentProfile = () => dispatch => {
     .get ('/api/profile')
     .then (res =>
       dispatch ({
-        type: GET_PROFILE,
+        type: GET_USER_PROFILE,
         payload: res.data
       })
     )
     .catch (err =>
       dispatch ({
-        type: GET_PROFILE,
+        type: GET_USER_PROFILE,
         payload: {}
       })
     )
@@ -115,11 +118,9 @@ export const deleteAccount = () => dispatch => {
   if (window.confirm ('Are you sure?  This action can not be undone.')) {
     axios
     .delete ('api/profile')
-    .then (res =>
-      dispatch ({
-        type: SET_CURRENT_USER,
-        payload: null
-      })
+    .then (res => {
+      dispatch (logoutUser());
+      }
     )
     .catch (err =>
       dispatch ({
@@ -137,6 +138,7 @@ export const addFollowing = (userid, history) => dispatch => {
   axios
     .post(`/api/profile/followings/${userid}`)
     .then (res => {
+      dispatch (getCurrentProfile());
       dispatch (getProfileByID(userid));
       dispatch (getAllProfiles())
     })
@@ -149,6 +151,7 @@ export const removeFollowing = (userid, history) => dispatch => {
   axios
     .delete(`/api/profile/followings/${userid}`)
     .then (res => {
+      dispatch (getCurrentProfile());
       dispatch (getProfileByID(userid));
       dispatch (getAllProfiles())
     })

@@ -2,12 +2,14 @@
 // Currently, all user profiles will be loaded on Redux Store if the user ever requested it
 import {
   GET_PROFILE,
+  GET_USER_PROFILE,
   GET_PROFILES,
   PROFILE_LOADING
 } from  '../actions/types';
 
 const initialState = {
   profile: null,
+  userProfile: null,
   profiles: null,
   loading: false
 };
@@ -18,6 +20,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profile: action.payload,
+        loading: false
+      }
+    case GET_USER_PROFILE:
+      return {
+        ...state,
+        userProfile: action.payload,
         loading: false
       }
     case GET_PROFILES:

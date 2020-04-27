@@ -16,7 +16,7 @@ import ProfileFollowers from './ProfileFollowers';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
-import UserPosts from '../posts/UserPosts';
+
 
 // ProfileHome is loaded when the user click on avatar on the navbar
 // If the user has a profile, then
@@ -39,7 +39,6 @@ class ProfileHome extends Component {
   // Get profile from Redux store
   componentDidMount() {
     this.props.getCurrentProfile();
-    this.props.getAllPosts();
   }
 
   // When Delete button is click on Profile
@@ -57,7 +56,8 @@ class ProfileHome extends Component {
 
   render() {
     const { user } = this.props.auth;
-    const { profile, loading } = this.props.profile;
+    const profile = this.props.profile.userProfile;
+    const { loading } = this.props.profile;
 
     let profileContent;
     
@@ -200,13 +200,12 @@ class ProfileHome extends Component {
     return (
       <div className="profileHome">
         <div className="container">
-          {profileContent}
+          {profileContent} 
+          {this.state.displayFollowings && 
+            <ProfileFollowings followings = {profile.followings}/>}
+          {this.state.displayFollowers && 
+            <ProfileFollowers followers = {profile.followers}/>}
         </div>
-        {this.state.displayFollowings && 
-          <ProfileFollowings followings = {profile.followings}/>}
-        {this.state.displayFollowers && 
-          <ProfileFollowers followers = {profile.followers}/>}
-
       </div>
     )
   }
@@ -217,7 +216,6 @@ ProfileHome.propTypes = {
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-  getAllPosts: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired
 };
 
@@ -227,4 +225,4 @@ const mapStateToProps = state => ({
   post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, deleteAccount, getAllPosts })(ProfileHome);
+export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(ProfileHome);

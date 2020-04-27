@@ -15,6 +15,7 @@ export const CREATE_POST = "CREATE_POST";
 export const DELETE_POST = "DELETE_POST";
 
 // Profile
+export const GET_USER_PROFILE = "GET_USER_PROFILE";
 export const GET_PROFILE = "GET_PROFILE";
 export const GET_PROFILES = "GET_PROFILES";
 export const PROFILE_LOADING = "PROFILE_LOADING";
