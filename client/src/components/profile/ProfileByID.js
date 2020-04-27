@@ -12,7 +12,7 @@ import {
   getProfileByID, 
   addFollowing, 
   removeFollowing } from '../../actions/profileActions';
-import {getAllPosts} from '../../actions/postActions'
+import { getAllPosts } from '../../actions/postActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -21,7 +21,6 @@ import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
-
 
 
 // Profile is loaded when the user click on avatar on profileList
@@ -39,23 +38,23 @@ class ProfileByID extends Component {
     super (props);
     this.state = {
       displayFollowings: false,
-      displayFollowers: false,
-      displayPosts: false
+      displayFollowers: false
     }
   }
 
   componentDidMount() { 
    
     // Get current user's profile
-    if (isEmpty(this.props.profile.userProfiles))
+    //if (isEmpty(this.props.profile.userProfiles))
       this.props.getCurrentProfile();
 
     // Get profile 
-    if (this.props.match.params.userid)
+    //if (this.props.match.params.userid)
       this.props.getProfileByID(this.props.match.params.userid);
 
     // Get all the posts so we can find user posts
-    this.props.getAllPosts();
+    //if (isEmpty(this.props.post.posts))
+      this.props.getAllPosts();
   }
 
   // Refresh when data changes
@@ -66,8 +65,7 @@ class ProfileByID extends Component {
      
       this.setState({
         displayFollowings: false,
-        displayFollowers: false,
-        displayPosts: true
+        displayFollowers: false
       });   
     }
   };
@@ -81,17 +79,18 @@ class ProfileByID extends Component {
   }
 
   render() {
+      
     const { posts } = this.props.post;
     const { profile, loading, userProfile } = this.props.profile;
         
     let profileContent;
-
+    
     // If user has posts, it will be displayed
     //
+    let displayPosts = false;
     const userPosts = posts.filter (post => post.user === profile.user._id);
-    (isEmpty(userPosts)) ? 
-      this.setState({ displayPosts: false }) :
-      this.setState({ displayPosts: true });
+    if (!isEmpty(userPosts))
+      displayPosts = true;
     
     if (profile === null || loading) {
       profileContent = <Spinner />
@@ -233,7 +232,7 @@ class ProfileByID extends Component {
           {this.state.displayFollowers && 
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
-          {this.state.displayPosts &&   
+          {displayPosts &&   
             <UserPosts posts = {userPosts}/>}
           </div>
         </div>
@@ -257,4 +256,4 @@ const mapStateToProps = state => ({
   post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, addFollowing, removeFollowing, getAllPosts })(withRouter(ProfileByID));
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, addFollowing, removeFollowing, getAllPosts })(ProfileByID);

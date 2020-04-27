@@ -12,6 +12,7 @@ import {
   getProfileByHandle, 
   addFollowing, 
   removeFollowing } from '../../actions/profileActions';
+import { getAllPosts } from '../../actions/postActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -41,8 +42,7 @@ class Profile extends Component {
     super (props);
     this.state = {
       displayFollowings: false,
-      displayFollowers: false,
-      displayPosts: false
+      displayFollowers: false
     }
   }
 
@@ -50,12 +50,17 @@ class Profile extends Component {
   componentDidMount() {
 
     // Get current user's profile
-    if (this.props.auth.isAuthenticated)
-      this.props.getCurrentProfile();
+    //if (isEmpty(this.props.profile.userProfiles))
+    this.props.getCurrentProfile();
 
+    // Get profile 
     if (this.props.match.params.handle) {
       this.props.getProfileByHandle(this.props.match.params.handle);
-    }
+     }
+
+    // Get all the posts so we can find user posts
+    //if (isEmpty(this.props.post.posts))
+      this.props.getAllPosts();
   }
 
   // Fire Redux action when user wants to add a following
@@ -69,11 +74,19 @@ class Profile extends Component {
   }
 
   render() {
-    const { profile, loading, profiles } = this.props.profile;
+    const { posts } = this.props.post;
+    const { profile, loading, userProfile, profiles } = this.props.profile;
     const { user, isAuthenticated } = this.props.auth;
 
     let profileContent;
     
+    // If user has posts, it will be displayed
+    //
+    let displayPosts = false;
+    const userPosts = posts.filter (post => post.user === profile.user._id);
+    if (!isEmpty(userPosts))
+      displayPosts = true;
+
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
@@ -212,8 +225,8 @@ class Profile extends Component {
           {this.state.displayFollowers && 
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
-          {this.state.displayPosts &&   
-            <UserPosts userid = {profile.user._id}/>}
+          {displayPosts &&   
+            <UserPosts posts = {userPosts}/>}
           </div>
         </div>
       </div>
@@ -228,11 +241,13 @@ Profile.propTypes = {
   removeFollowing: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   profile: state.profile,
   auth: state.auth,
+  post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, getProfileByHandle, addFollowing, removeFollowing })(withRouter(Profile));
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByHandle, addFollowing, removeFollowing, getAllPosts })(Profile);

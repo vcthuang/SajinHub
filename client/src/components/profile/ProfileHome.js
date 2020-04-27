@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Redux action
-import { getCurrentProfile, deleteAccount } from '../../actions/profileActions';
+import { getCurrentProfile, getProfileByID, deleteAccount } from '../../actions/profileActions';
 import { getAllPosts } from '../../actions/postActions';
 
 // UI displaycomponent
@@ -39,12 +39,12 @@ class ProfileHome extends Component {
   // Get profile from Redux store
   componentDidMount() {
     this.props.getCurrentProfile();
+    this.props.getProfileByID(this.props.auth.user.id);
   }
 
   // When Delete button is click on Profile
   // Call redux action - deleteAccount
   onDeleteClick(e) {
-    
     this.props.deleteAccount();
   }
     
@@ -213,6 +213,7 @@ class ProfileHome extends Component {
 
 ProfileHome.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
+  getProfileByID: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -225,4 +226,4 @@ const mapStateToProps = state => ({
   post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, deleteAccount })(ProfileHome);
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, deleteAccount })(ProfileHome);
