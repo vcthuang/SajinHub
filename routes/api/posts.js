@@ -40,6 +40,15 @@ router.get('/', (req, res) => {
   .catch(() => res.status(404).json({ post: 'Posts not found' }));
 });
 
+// @route     GET api/posts/userpost/:id (user._id)
+// @desc      GET User's posts by chronological order
+// @access    Public
+router.get('/userposts/:id', (req, res) => {
+  Post.find({ user: req.params.id })
+    .sort({ date: -1 })
+    .then(posts => res.json(posts))
+    .catch(() => res.status(404).json({ post: 'Posts not found' }));
+});
 
 // @route     GET api/posts/:id
 // @desc      GET A post by Post _id
