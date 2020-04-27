@@ -1,6 +1,7 @@
 import { 
   POST_LOADING, 
   GET_ALL_POSTS, 
+  GET_USER_POSTS,
   GET_POST, 
   CREATE_POST, 
   DELETE_POST, 
@@ -21,6 +22,20 @@ export const getAllPosts = () => dispatch => {
     type: GET_ALL_POSTS,
     payload: []
   }))
+}
+
+// Get User's Posts
+export const getUserPosts = userId => dispatch => {
+  axios
+    .get(`/api/posts/userposts/${userId}`)
+    .then(res => dispatch({
+      type: GET_USER_POSTS,
+      payload: res.data
+    }))
+    .catch(err => dispatch({
+      type: GET_USER_POSTS,
+      payload: []
+    }))
 }
 
 // Get Post

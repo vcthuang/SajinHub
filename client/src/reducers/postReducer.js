@@ -1,12 +1,14 @@
 import { 
   POST_LOADING, 
   GET_ALL_POSTS, 
+  GET_USER_POSTS,
   GET_POST, 
   CREATE_POST, 
   DELETE_POST } from '../actions/types';
 
 const initialState = {
   post: {},
+  userposts: [],
   posts: [],
   loading: false
 }
@@ -25,6 +27,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: action.payload,
+        loading: false
+      };
+
+    case GET_USER_POSTS:
+      return {
+        ...state,
+        userposts: action.payload,
         loading: false
       };
 
