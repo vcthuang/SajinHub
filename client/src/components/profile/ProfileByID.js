@@ -10,9 +10,9 @@ import PropTypes from 'prop-types';
 import { 
   getCurrentProfile, 
   getProfileByID, 
-  getAllProfiles, 
   addFollowing, 
   removeFollowing } from '../../actions/profileActions';
+import {getAllPosts} from '../../actions/postActions'
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
@@ -45,17 +45,17 @@ class ProfileByID extends Component {
   }
 
   componentDidMount() { 
-    // if (isEmpty(this.props.profile.profiles))
-    //   this.props.getAllProfiles();
-    
+   
     // Get current user's profile
     if (isEmpty(this.props.profile.userProfiles))
       this.props.getCurrentProfile();
 
     // Get profile 
-    //if (this.props.match.params.userid) {
-    this.props.getProfileByID(this.props.match.params.userid);
-  
+    if (this.props.match.params.userid)
+      this.props.getProfileByID(this.props.match.params.userid);
+
+    // Get all the posts so we can find user posts
+    this.props.getAllPosts();
   }
 
   // Refresh when data changes
@@ -81,26 +81,38 @@ class ProfileByID extends Component {
   }
 
   render() {
-    
+    const { posts } = this.props.post;
     const { profile, loading, userProfile } = this.props.profile;
         
     let profileContent;
+
+    // If user has posts, it will be displayed
+    //
+    const userPosts = posts.filter (post => post.user === profile.user._id);
+    (isEmpty(userPosts)) ? 
+      this.setState({ displayPosts: false }) :
+      this.setState({ displayPosts: true });
     
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
+      
       // Location
+      //
       const location = isEmpty(profile.location) ? 
         null : 
         (<span>{profile.location.city} {profile.location.country}</span>);
 
       // Interests
+      //
       const interests = profile.interests.map((interest, index) => (
         <div key={index} className="p-3">
           <i className="fas fa-camera" /> {interest}
         </div>
       ));
 
+      // Top right corner button.  It's either:  Subscribe, unsubscribe, Me
+      //
       let subsButton;
       // Can't subscribe to yourself
       if (profile.user._id !== userProfile.user._id) {
@@ -136,8 +148,6 @@ class ProfileByID extends Component {
 
       profileContent = (
         <div>
-          <div>Current User: {userProfile.user.name}{userProfile.user._id}</div>
-          <div>Profile: {profile.user.name}{profile.user._id}</div>
           <div className="row">
             {/* Leftside contains avatar, location, website */}
             <div className="col-sm-4 card">
@@ -206,18 +216,6 @@ class ProfileByID extends Component {
                     Followers{'\u00A0'}{'\u00A0'}
                     <span className="badge badge-light mx-1">{profile.followers.length}</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.setState(prevState => ({
-                        displayPosts: !prevState.displayPosts
-                      }));
-                    }}
-                    className="btn btn-dark mx-3"
-                  ><i className="fa fa-heart pr-2" style={{color:"red"}}></i>
-                    Followers{'\u00A0'}{'\u00A0'}
-                    <span className="badge badge-light mx-1">{profile.followers.length}</span>
-                  </button>
                 </div>
               </div>               
             </div>
@@ -236,7 +234,7 @@ class ProfileByID extends Component {
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
           {this.state.displayPosts &&   
-            <UserPosts userid = {profile.user._id}/>}
+            <UserPosts posts = {userPosts}/>}
           </div>
         </div>
       </div>
@@ -247,14 +245,16 @@ class ProfileByID extends Component {
 ProfileByID.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   getProfileByID: PropTypes.func.isRequired,
-  getAllProfiles: PropTypes.func.isRequired,
   addFollowing: PropTypes.func.isRequired,
   removeFollowing: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired,
+  getAllPosts: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, getAllProfiles, addFollowing, removeFollowing })(withRouter(ProfileByID));
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, addFollowing, removeFollowing, getAllPosts })(withRouter(ProfileByID));
