@@ -5,41 +5,48 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { getCurrentProfile } from '../../actions/profileActions';
-import FollowingPosts from './FollowingPosts';
 import Spinner from '../common/Spinner';
+import PostFeed from './PostFeed';
+
 
 class FollowingsPosts extends Component {
 
   componentDidMount() {
-    if (this.props.profile.userProfile === {})
+    if (this.props.profile.userProfile === null)
       this.props.getCurrentProfile();
-    
   }
 
   render() {
     const profile = this.props.profile.userProfile;
     const { loading } = this.props.profile;
+    const { posts } = this.props.post;
     
     let followingsPosts;
+    let followingsPostsURL;
+
 
     if (profile === null || loading) {
-      followingsPosts = <Spinner />
+      followingsPostsURL = <Spinner />
     } else {
       if (profile.followings.length > 0 ) {
-        followingsPosts = profile.followings.map (following => (
-          <FollowingPosts key={following._id} userid={following.user} />
-        ));
+
+        followingsPosts = posts.filter(post => 
+          profile.followings.map(following => following.user).indexOf(post.user) >= 0);
+        followingsPostsURL =  (
+          <PostFeed posts={followingsPosts} />
+        );
       } else {
-        followingsPosts = <h4>You are not following any of our awesome photographers!</h4>
+        followingsPostsURL = <h4>You are not following any of our awesome photographers!</h4>
       }
     }
 
     return (
       <div className="friendsPost">
         <div className="container">
-          <div className="row justify-content-between" style={{ marginTop: '25px' }}>
-            <div className="col-12">
-              {followingsPosts}
+          <div className="row justify-content-center">
+            <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
+              <br/>
+              {followingsPostsURL}
             </div>
           </div>
         </div>
@@ -48,13 +55,19 @@ class FollowingsPosts extends Component {
   }
 }
 
+
+
+
+
 FollowingsPosts.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  post: state.post
 });
 
 export default connect (mapStateToProps, {getCurrentProfile})(FollowingsPosts);
