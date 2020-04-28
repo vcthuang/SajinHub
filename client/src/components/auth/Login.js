@@ -35,7 +35,6 @@ class Login extends Component {
 
     // pass user data to loginUser() (Redux cycle)
     this.props.loginUser(user);
-    
   }
 
   // when Login Component is loaded, this function will be invoked immediately

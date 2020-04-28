@@ -31,7 +31,13 @@ export const updateProfile = (profileData, history) => dispatch => {
   dispatch(clearErrors());
   axios
     .post ('/api/profile', profileData)
-    .then (res => history.push ('/profile'))
+    .then (res => {
+      dispatch ({
+        type: GET_USER_PROFILE,
+        payload: res.data
+      })
+      history.push ('/profile');
+    })
     .catch (err =>
       dispatch ({
         type: SET_ERRORS,

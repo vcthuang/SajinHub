@@ -50,16 +50,15 @@ class Profile extends Component {
   componentDidMount() {
 
     // Get current user's profile
-    //if (isEmpty(this.props.profile.userProfiles))
-    this.props.getCurrentProfile();
+    if (isEmpty(this.props.profile.userProfiles))
+      this.props.getCurrentProfile();
 
     // Get profile 
     if (this.props.match.params.handle) {
       this.props.getProfileByHandle(this.props.match.params.handle);
      }
 
-    // Get all the posts so we can find user posts
-    //if (isEmpty(this.props.post.posts))
+    if (isEmpty(this.props.post.posts))
       this.props.getAllPosts();
   }
 
@@ -83,13 +82,16 @@ class Profile extends Component {
     // If user has posts, it will be displayed
     //
     let displayPosts = false;
-    const userPosts = posts.filter (post => post.user === profile.user._id);
-    if (!isEmpty(userPosts))
-      displayPosts = true;
+    let userPosts= null;
 
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
+      // posts
+      userPosts = posts.filter (post => post.user === profile.user._id);
+      if (!isEmpty(userPosts))
+        displayPosts = true;
+
       // Location
       const location = isEmpty(profile.location) ? 
         null : 

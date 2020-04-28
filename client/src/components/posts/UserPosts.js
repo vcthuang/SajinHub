@@ -9,17 +9,14 @@ class UserPosts extends Component {
 
   render() {     
     return (     
-      
-        <div className="card ">
-          <h5 className="card-header">      
-            <i className="fas fa-edit pr-2" style={{ color: "red" }}></i>
-              Recent Posts
-            </h5>
-            <div className="card-body justify-content-center">
-              <PostFeed posts={this.props.posts} />
-            </div>
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
+            <br />
+            <PostFeed posts={this.props.posts} />
+          </div>
         </div>
-  
+      </div>
     )
   }
 } 
