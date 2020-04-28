@@ -279,7 +279,8 @@ router.delete(
           // By this state, we don't expect exception
           Profile.findOne({user: req.params.user_id})
           .then (friendprofile => {
-            const removeIndex1 = profile.followers
+            //const removeIndex1 = profile.followers
+            const removeIndex1 = friendprofile.followers
               .map (follower => follower.user.toString())
               .indexOf (req.user.id);
 

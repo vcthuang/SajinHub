@@ -38,6 +38,7 @@ class ProfileUpdate extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    // Update errors
     if (nextProps.errors) {
       this.setState({errors: nextProps.errors});
     }

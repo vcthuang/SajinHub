@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import Moment from 'react-moment';
 
 // Redux libraries
 import isEmpty from '../../validations/isEmpty';
 
-// ProfileFollowers list all the followers by handle and avatar
+// ProfileFollowers list all the followers by:
+// 1. handle
+// 2. avatar
+// 3. beginDate
+
 class ProfileFollowers extends Component {
 
   render() {
@@ -13,7 +18,7 @@ class ProfileFollowers extends Component {
       followers = (
         <div className="card">
           <div className="card-body">
-            There are no followers dear.  Please go and make some friends!
+            There are no followers...!
           </div>
         </div>
       );
@@ -28,6 +33,9 @@ class ProfileFollowers extends Component {
                 style = {{width:'50px'}}
                 className="rounded-circle img-fluid" />
             </Link>
+            <div>
+              <small>since <Moment format="YYYY/MM/DD">{follower.beginDate}</Moment></small>
+            </div>
           </div>
         </div>
       ));

@@ -34,6 +34,7 @@ class ProfileCreate extends Component {
     this.onSave = this.onSave.bind(this);
   }
 
+  // Update errors
   componentWillReceiveProps (nextProps) {
     if (nextProps.errors) {
       this.setState({errors: nextProps.errors});
@@ -59,7 +60,7 @@ class ProfileCreate extends Component {
       interests: this.state.interests,
     };
 
-    // Fire Redux action
+    // Fire Redux action and amd make API call
     this.props.updateProfile (profileData, this.props.history);
   };
 
@@ -138,7 +139,6 @@ class ProfileCreate extends Component {
                     <i className="fas fa-times-circle pr-2" title = "Cancel"></i>
                     Cancel
                   </Link>
-
                   <button
                     type="submit"
                     value="Save"

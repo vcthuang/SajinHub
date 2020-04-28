@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -30,7 +29,7 @@ import isEmpty from '../../validations/isEmpty';
 // All profile information is displayed.  The user can toggle
 // following and follower buttons to view more information.
 // 
-// Ideally, this is also the place where the user could subscribe
+// This is also the place where the user could subscribe
 // to a following.
 
 class ProfileByID extends Component {
@@ -45,21 +44,20 @@ class ProfileByID extends Component {
   componentDidMount() { 
    
     // Get current user's profile
-    if (isEmpty(this.props.profile.userProfiles))
+    if (isEmpty(this.props.profile.userProfile))
       this.props.getCurrentProfile();
 
-    // Get profile 
+    // Get profile of the avatar user clicked
     if (this.props.match.params.userid)
       this.props.getProfileByID(this.props.match.params.userid);
 
-    // Get user posts so we can find user posts
-    if(isEmpty(this.props.post.userPosts))
+    // Get user's posts linked to profile
+    //if(isEmpty(this.props.post.userPosts))
       this.props.getUserPosts(this.props.match.params.userid);
   
   }
 
-  // Refresh when data changes
-  // when user id is changed, we need to fresh the page
+  // When user id is changed, we need to fresh the page
   componentDidUpdate = (prevProps) => {
     if(this.props.match.params.userid !== prevProps.match.params.userid) {
       this.props.getProfileByID(this.props.match.params.userid);
@@ -72,17 +70,18 @@ class ProfileByID extends Component {
     }
   };
 
+  // Fire Redux action when user wants to add a following
   onAddFollowing(userid) {
     this.props.addFollowing (userid);
   }
-
+  
+  // Fire Redux action when user wants to remove a following
   onRemoveFollowing(userid) {
     this.props.removeFollowing (userid);
   }
 
   render() {
       
-    //const { posts } = this.props.post;
     const { profile, loading, userProfile } = this.props.profile;
     const { userposts } = this.props.post;
 
@@ -90,23 +89,20 @@ class ProfileByID extends Component {
     
     // If user has posts, it will be displayed
     let displayPosts = false;
-    let userPosts = null;
-    
+      
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
-      //userPosts = posts.filter (post => post.user === profile.user._id);
+  
       if (!isEmpty(userposts))
         displayPosts = true;
 
       // Location
-      //
       const location = isEmpty(profile.location) ? 
         null : 
         (<span>{profile.location.city} {profile.location.country}</span>);
 
       // Interests
-      //
       const interests = profile.interests.map((interest, index) => (
         <div key={index} className="p-3">
           <i className="fas fa-camera" /> {interest}
@@ -114,12 +110,11 @@ class ProfileByID extends Component {
       ));
 
       // Top right corner button.  It's either:  Subscribe, unsubscribe, Me
-      //
       let subsButton;
       // Can't subscribe to yourself
       if (profile.user._id !== userProfile.user._id) {
-        // Display subscribe or unsubscribe button
         
+        // Display subscribe, unsubscribe or me button
         // Check if current user is following the profile user
         const found = userProfile.followings.find(following => following.user === profile.user._id);
 
@@ -164,7 +159,7 @@ class ProfileByID extends Component {
                 {profile.website && (<a className="card-text" href={profile.website} target="_blank">{profile.website}</a>)}
               </div>
             </div>
-            {/* Rightside contains joined date, name, handle, bio, interests*/}
+            {/* Rightside contains joined date, name, handle, bio, interests, following & followers buttons*/}
             <div className="col-sm-8 card bg-dark">  
               <div className="card-body text-white">
                 <div className="card-text mb-3">
