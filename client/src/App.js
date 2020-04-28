@@ -24,6 +24,7 @@ import ProfileByID from './components/profile/ProfileByID';
 
 import Posts from './components/posts/Posts';
 import Post from './components/posts/Post';
+import FollowingsPosts from './components/posts/FollowingsPosts';
 
 import jwt_decode from 'jwt-decode';                               // Decrypt
 import { logoutUser } from './actions/authActions';
@@ -33,6 +34,7 @@ import PostForm from './components/posts/PostForm';
 import UserPosts from './components/posts/UserPosts';
 
 import PrivateRoute from './components/common/PrivateRoute';
+
 
 
 //
@@ -81,6 +83,9 @@ function App() {
         </Switch>
         <Switch>
           <PrivateRoute exact strict path= "/profile/user/:userid" component= {ProfileByID} />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path= "/following" component= {FollowingsPosts} />
         </Switch>
         <Switch>
           <PrivateRoute exact path= "/profile-create" component= {ProfileCreate} />

@@ -8,11 +8,12 @@ import PropTypes from 'prop-types';
 
 // Redux action
 import { getCurrentProfile, getProfileByID, deleteAccount } from '../../actions/profileActions';
-import { getAllPosts } from '../../actions/postActions';
+import { getUserPosts } from '../../actions/postActions';
 
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
 import ProfileFollowers from './ProfileFollowers';
+import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
@@ -38,8 +39,11 @@ class ProfileHome extends Component {
   // When the page is loading
   // Get profile from Redux store
   componentDidMount() {
-    this.props.getCurrentProfile();
+    if (isEmpty(this.props.profile.userProfiles))
+      this.props.getCurrentProfile();
+    
     this.props.getProfileByID(this.props.auth.user.id);
+    this.props.getUserPosts(this.props.auth.user.id);
   }
 
   // When Delete button is click on Profile
@@ -58,13 +62,24 @@ class ProfileHome extends Component {
     const { user } = this.props.auth;
     const profile = this.props.profile.userProfile;
     const { loading } = this.props.profile;
+    //const { posts } = this.props.post;
+    const { userposts } = this.props.post;
 
     let profileContent;
+
+    // If user has posts, it will be displayed
+    let displayPosts = false;
+    //let userPosts = null;
     
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
       if (Object.keys(profile).length > 0 ) {
+        
+        //userPosts = posts.filter (post => post.user === profile.user._id);
+        if (!isEmpty(userposts))
+          displayPosts = true;
+
         // location
         const location = isEmpty(profile.location) ? 
           null : 
@@ -205,6 +220,10 @@ class ProfileHome extends Component {
             <ProfileFollowings followings = {profile.followings}/>}
           {this.state.displayFollowers && 
             <ProfileFollowers followers = {profile.followers}/>}
+          <div className="row">
+          {displayPosts &&   
+            <UserPosts posts = {userposts}/>}
+          </div>
         </div>
       </div>
     )
@@ -214,6 +233,7 @@ class ProfileHome extends Component {
 ProfileHome.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   getProfileByID: PropTypes.func.isRequired,
+  getUserPosts: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -226,4 +246,4 @@ const mapStateToProps = state => ({
   post: state.post
 });
 
-export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, deleteAccount })(ProfileHome);
+export default connect (mapStateToProps, { getCurrentProfile, getProfileByID, deleteAccount, getUserPosts })(ProfileHome);
