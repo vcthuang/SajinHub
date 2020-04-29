@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getAllPosts } from '../../actions/postActions';
+import { getCurrentProfile } from '../../actions/profileActions';
 
 import Spinner from '../common/Spinner';
 import PostFeed from './PostFeed';
@@ -12,6 +13,7 @@ class Posts extends Component {
 
   componentDidMount() {
     this.props.getAllPosts();
+    this.props.getCurrentProfile();
   }
 
   render() {
@@ -50,4 +52,4 @@ const mapStateToProps = state => ({
   post: state.post
 });
 
-export default connect(mapStateToProps, { getAllPosts })(Posts);
+export default connect(mapStateToProps, { getAllPosts, getCurrentProfile })(Posts);
