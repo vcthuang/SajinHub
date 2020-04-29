@@ -16,7 +16,7 @@ import { getUserPosts } from '../../actions/postActions';
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
 import ProfileFollowers from './ProfileFollowers';
-import ProfilePosts from '../posts/ProfilePosts';
+import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
@@ -231,7 +231,7 @@ class ProfileByID extends Component {
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
           {displayPosts &&   
-            <ProfilePosts posts = {userposts}/>}
+            <UserPosts posts = {userposts}/>}
           </div>
         </div>
       </div>

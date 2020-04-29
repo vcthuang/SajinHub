@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profileActions';
 import Spinner from '../common/Spinner';
 import PostFeed from './PostFeed';
+import isEmpty from '../../validations/isEmpty';
 
 
 class FollowingsPosts extends Component {
@@ -28,15 +29,19 @@ class FollowingsPosts extends Component {
     if (profile === null || loading) {
       followingsPostsURL = <Spinner />
     } else {
-      if (profile.followings.length > 0 ) {
+      if (!isEmpty(profile)) {
+        if (profile.followings.length > 0 ) {
 
-        followingsPosts = posts.filter(post => 
-          profile.followings.map(following => following.user).indexOf(post.user) >= 0);
-        followingsPostsURL =  (
-          <PostFeed posts={followingsPosts} />
-        );
+          followingsPosts = posts.filter(post => 
+            profile.followings.map(following => following.user).indexOf(post.user) >= 0);
+          followingsPostsURL =  (
+            <PostFeed posts={followingsPosts} />
+          );
+        } else {
+          followingsPostsURL = <h4>You are not following any of our awesome photographers!</h4>
+        }
       } else {
-        followingsPostsURL = <h4>You are not following any of our awesome photographers!</h4>
+        followingsPostsURL = <h4>Please set up your profile first!</h4>
       }
     }
 

@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import ProfilePostsFeed from './ProfilePostsFeed';
 import PropTypes from 'prop-types';
 
-class ProfilePosts extends Component {
+class UserPosts extends Component {
 
   render() {     
     return (     
@@ -27,4 +27,4 @@ UserPosts.propTypes = {
   posts: PropTypes.array.isRequired,
 }
 
-export default ProfilePosts;
+export default UserPosts;

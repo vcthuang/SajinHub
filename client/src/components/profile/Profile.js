@@ -16,7 +16,7 @@ import { getAllPosts } from '../../actions/postActions';
 // UI displaycomponent
 import ProfileFollowings from './ProfileFollowings';
 import ProfileFollowers from './ProfileFollowers';
-import ProfilePosts from '../posts/ProfilePosts';
+import UserPosts from '../posts/UserPosts';
 
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
@@ -110,26 +110,31 @@ class Profile extends Component {
         } else {
           // Display subscribe, unsubscribe or me button
           // Find the profile for current user
+                   
           const currentUserProfile = profiles.find(p => p.user._id === user.id);
           // Check if current user is following the profile user
-          const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
+           // User might not have a profile
+          if (!isEmpty(currentUserProfile)) {
+
+            const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
                   
-          if (!found) {
-            subsButton = (
-              <button
-                onClick={this.onAddFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
-                Subscribe
-              </button>);
-          } else {
-            subsButton = (
-              <button
-                onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
-                Unsubscribe
-              </button>);
+            if (!found) {
+              subsButton = (
+                <button
+                  onClick={this.onAddFollowing.bind(this, profile.user._id)}
+                  className="btn btn-dark float-right"
+                ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+                  Subscribe
+                </button>);
+            } else {
+              subsButton = (
+                <button
+                  onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
+                  className="btn btn-dark float-right"
+                ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
+                  Unsubscribe
+                </button>);
+            }
           }
         }
       }
@@ -222,7 +227,7 @@ class Profile extends Component {
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
           {displayPosts &&   
-            <ProfilePosts posts = {userPosts}/>}
+            <UserPosts posts = {userPosts}/>}
           </div>
         </div>
       </div>
