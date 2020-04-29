@@ -16,6 +16,9 @@ const posts = require('./routes/api/posts');
 // create an instance of our app
 const app = express();
 
+// a way to access a specific folder
+const path = require('path');
+
 // body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -41,8 +44,19 @@ app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
 
+// in case of Production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder and start index.html
+  app.use(express.static('client/build'));
+
+  // default 'index,js'
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  })
+}
+
 // set up port
-const port = 8030;
+const port = process.env.PORT || 8030;
 app.listen(port, () => console.log(`Server running on port ${port}`) );
 //
 // END initialization
