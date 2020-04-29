@@ -106,7 +106,9 @@ router.delete(
             .indexOf (req.user.id);
           // remove user in friend's follower table  
           followingprofile.followers.splice(removeIndex, 1);
-          followingprofile.save().then (followingprofile => res.json(followingprofile));
+          followingprofile.save()
+            .then (followingprofile => res.json(followingprofile))
+            .catch (err=>res.status(404).json(err));
         })
         .catch (err=>res.status(404).json(err));
       });
@@ -122,16 +124,14 @@ router.delete(
             .indexOf (req.user.id);
           // remove user in friend's follower table  
           followerprofile.followings.splice(removeIndex1, 1);
-          followerprofile.save().then (followerprofile => res.json(followerprofile));
+          followerprofile.save()
+            .then (followerprofile => res.json(followerprofile))
+            .catch (err=>res.status(404).json(err));
         })
         .catch (err=>res.status(404).json(err));
       });
-    })
-    .catch (err=>res.status(404).json(err));
 
-    // 2) Delete user's profile document from profiles collection in MongoDB
-    Profile.findOneAndRemove({user: req.user.id})
-    .then (profile => {
+      // 2) Delete user's profile document from profiles collection in MongoDB
       profile.remove()
         .then(() => res.json({ success: true }))
         .catch(err => res.json(err));
@@ -281,7 +281,9 @@ router.post(
             });
 
             // Write to MongoDB
-            profile.save().then (profile => res.json(profile));
+            profile.save()
+              .then (profile => res.json(profile))
+              .catch (err=>res.status(404).json(err));
 
             // Add req.user_id (current user) to followers array of req.params.user_id (friend)
             friendprofile.followers.unshift ({
@@ -290,7 +292,9 @@ router.post(
               avatar: profile.user.avatar
             });
 
-            friendprofile.save().then (friendprofile => res.json(friendprofile));
+            friendprofile.save()
+              .then (friendprofile => res.json(friendprofile))
+              .catch (err=>res.status(404).json(err));
           })
           .catch (err=>res.status(404).json(err));
       })
@@ -318,7 +322,9 @@ router.delete(
 
           // splice friend/follwing out of followings array
           profile.followings.splice (removeIndex, 1);
-          profile.save().then (profile => res.json(profile));
+          profile.save()
+            .then (profile => res.json(profile))
+            .catch (err=>res.status(404).json(err));
 
           // Update followers/subscriber array in req.params.user_id's / friend's profile
           // By this state, we don't expect exception
@@ -329,7 +335,9 @@ router.delete(
               .indexOf (req.user.id);
 
             friendprofile.followers.splice(removeIndex1, 1);
-            friendprofile.save().then (friendprofile => res.json(friendprofile));
+            friendprofile.save()
+              .then (friendprofile => res.json(friendprofile))
+              .catch (err=>res.status(404).json(err));
           })
           .catch (err=>res.status(404).json(err));
 
