@@ -54,8 +54,15 @@ class ProfileUpdate extends Component {
       // Make an empty string if the optional fields are empty
       profile.bio = !isEmpty (profile.bio) ? profile.bio : '';
       profile.website = !isEmpty (profile.website) ? profile.website : '';
-      profile.location.city = !isEmpty (profile.location.city) ? profile.location.city : '';
-      profile.location.country = !isEmpty (profile.location.country) ? profile.location.country : '';
+      
+      if (isEmpty (profile.location)) {
+        profile.location = {};
+        profile.location.city = '';
+        profile.location.city = '';
+      } else {
+        profile.location.city = !isEmpty (profile.location.city) ? profile.location.city : '';
+        profile.location.country = !isEmpty (profile.location.country) ? profile.location.country : '';
+      }
 
       // Place user info on the screen
       // Since the input fields have value = this.state
