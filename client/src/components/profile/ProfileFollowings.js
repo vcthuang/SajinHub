@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import Moment from 'react-moment';
 
 // Redux libraries
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import isEmpty from '../../validations/isEmpty';
 
-// ProfileFollowers list all the followers by handle and avatar
+// ProfileFollowings list all the following by:
+// 1. handle
+// 2. avatar
+// 3. beginDate
+
 class ProfileFollowings extends Component {
   
   render() {
@@ -14,7 +17,7 @@ class ProfileFollowings extends Component {
     if ( isEmpty(this.props.followings)) {
       followings = (
         <div className="card-body">
-            There are no followings dear.  Please add some from our awesome pool of photographers!
+            There are no following...!
         </div>
       );
     } else {
@@ -28,6 +31,9 @@ class ProfileFollowings extends Component {
                 style = {{width:'50px'}}
                 className="rounded-circle img-fluid" />
             </Link>
+            <div>
+              <small>since <Moment format="YYYY/MM/DD">{following.beginDate}</Moment></small>
+            </div>
           </div>
         </div>
       ));

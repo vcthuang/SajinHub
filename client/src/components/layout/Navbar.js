@@ -66,7 +66,7 @@ class Navbar extends Component {
         {/* Like icon */}
         <li className = "nav-item">
           <Link className = "nav-link" to = '/following'>
-            <i className="fas fa-heart nav-icon" title = "following"></i>
+            <i className="fas fa-heart nav-icon" title = "following's posts"></i>
           </Link>
         </li>
         

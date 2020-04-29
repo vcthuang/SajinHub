@@ -31,7 +31,6 @@ import { logoutUser } from './actions/authActions';
 import setAuthToken from './utils/setAuthToken';
 import { SET_CURRENT_USER } from './actions/types';
 import PostForm from './components/posts/PostForm';
-import UserPosts from './components/posts/UserPosts';
 
 import PrivateRoute from './components/common/PrivateRoute';
 
@@ -101,9 +100,6 @@ function App() {
         </Switch>
         <Switch>
           <PrivateRoute exact path="/post" component={PostForm} />
-        </Switch>
-        <Switch>
-          <PrivateRoute exact path="/userposts/:id" component={UserPosts} />
         </Switch>
 
         <Footer />

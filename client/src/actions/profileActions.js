@@ -15,7 +15,6 @@ import axios from 'axios';
 
 // Redux dispatch types
 import {
-  SET_CURRENT_USER,
   GET_PROFILE,
   GET_USER_PROFILE,
   GET_PROFILES,

@@ -21,7 +21,7 @@ import isEmpty from '../../validations/isEmpty';
 
 // ProfileHome is loaded when the user click on avatar on the navbar
 // If the user has a profile, then
-//   the information in profile is displayed
+//   the information in profile plus posts are displayed
 // else 
 //   the user is asked to create a profile
 //
@@ -36,13 +36,15 @@ class ProfileHome extends Component {
     }
   }
 
-  // When the page is loading
-  // Get profile from Redux store
   componentDidMount() {
-    if (isEmpty(this.props.profile.userProfiles))
+    // Get current user's profile
+    if (isEmpty(this.props.profile.userProfile))
       this.props.getCurrentProfile();
     
+    // Set Redux store - profile->profile to user's profile
     this.props.getProfileByID(this.props.auth.user.id);
+    
+    // Get current user's latest posts
     this.props.getUserPosts(this.props.auth.user.id);
   }
 
@@ -121,7 +123,7 @@ class ProfileHome extends Component {
                   </div>
                 </div>
               </div>
-              {/* Rightside contains: joined date, name, handle, bio, interests*/}
+              {/* Rightside contains: joined date, name, handle, bio, interests, following & followers buttons*/}
               <div className="col-sm-8 card bg-dark">  
                 <div className="card-body text-white">
                   <div className="card-text mb-3">

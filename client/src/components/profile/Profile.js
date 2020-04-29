@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 
 // Redux libraries
@@ -22,20 +21,15 @@ import UserPosts from '../posts/UserPosts';
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validations/isEmpty';
 
-
-
 // Profile is loaded when the user click on avatar on profileList
 // This means, there is not going to be a chance for user to
 // to click on other user who doesn't have profile.
 //
 // All profile information is displayed.  The user can toggle
 // following and follower buttons to view more information.
+// However, browsing is limited until user is logged in.
 // 
-// This is also the place where the user could subscribe or 
-// unsubscribe to a following.
-//
-// Besides the buttons, the display is similar to that of 
-// ProfileHome and ProfileByID.
+// The display is similar to that of ProfileHome and ProfileByID.
 
 class Profile extends Component {
   constructor (props) {
@@ -50,14 +44,15 @@ class Profile extends Component {
   componentDidMount() {
 
     // Get current user's profile
-    if (isEmpty(this.props.profile.userProfiles))
+    if (isEmpty(this.props.profile.userProfile))
       this.props.getCurrentProfile();
 
-    // Get profile 
+    // Get profile of the avatar user clicked
     if (this.props.match.params.handle) {
       this.props.getProfileByHandle(this.props.match.params.handle);
      }
 
+    // This could happen as posts is loaded when user logs in
     if (isEmpty(this.props.post.posts))
       this.props.getAllPosts();
   }
@@ -74,13 +69,12 @@ class Profile extends Component {
 
   render() {
     const { posts } = this.props.post;
-    const { profile, loading, userProfile, profiles } = this.props.profile;
+    const { profile, loading, profiles } = this.props.profile;
     const { user, isAuthenticated } = this.props.auth;
 
     let profileContent;
     
     // If user has posts, it will be displayed
-    //
     let displayPosts = false;
     let userPosts= null;
 
@@ -114,28 +108,33 @@ class Profile extends Component {
               Me
             </div>);
         } else {
-          // Display subscribe or unsubscribe button
+          // Display subscribe, unsubscribe or me button
           // Find the profile for current user
+                   
           const currentUserProfile = profiles.find(p => p.user._id === user.id);
           // Check if current user is following the profile user
-          const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
+           // User might not have a profile
+          if (!isEmpty(currentUserProfile)) {
+
+            const found = currentUserProfile.followings.find(following => following.user === profile.user._id);
                   
-          if (!found) {
-            subsButton = (
-              <button
-                onClick={this.onAddFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
-                Subscribe
-              </button>);
-          } else {
-            subsButton = (
-              <button
-                onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
-                className="btn btn-dark float-right"
-              ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
-                Unsubscribe
-              </button>);
+            if (!found) {
+              subsButton = (
+                <button
+                  onClick={this.onAddFollowing.bind(this, profile.user._id)}
+                  className="btn btn-dark float-right"
+                ><i className="fas fa-paw pr-2" style={{color:"red"}}></i>
+                  Subscribe
+                </button>);
+            } else {
+              subsButton = (
+                <button
+                  onClick={this.onRemoveFollowing.bind(this, profile.user._id)}
+                  className="btn btn-dark float-right"
+                ><i className="fas fa-heart-broken pr-2" style={{color:"red"}}></i>
+                  Unsubscribe
+                </button>);
+            }
           }
         }
       }
@@ -156,7 +155,7 @@ class Profile extends Component {
                 {profile.website && (<a className="card-text" href={profile.website} target="_blank">{profile.website}</a>)}
               </div>
             </div>
-            {/* Rightside contains joined date, name, handle, bio, interests*/}
+            {/* Rightside contains joined date, name, handle, bio, interests, following & followers buttons*/}
             <div className="col-sm-8 card bg-dark">  
               <div className="card-body text-white">
                 <div className="card-text mb-3">

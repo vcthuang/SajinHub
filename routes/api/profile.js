@@ -92,9 +92,44 @@ router.delete(
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
 
-    
+    // 1) Update profiles for current user's following & followers
+    Profile.findOne ({user: req.user.id})
+    .then( profile => {    
+      // for each followings
+      profile.followings.forEach ( following => {            
+        // get following's profile  
+        Profile.findOne({user: following.user})
+        .then (followingprofile => {
+          // find user in friend's follower table
+          const removeIndex = followingprofile.followers
+            .map (follower => follower.user.toString())
+            .indexOf (req.user.id);
+          // remove user in friend's follower table  
+          followingprofile.followers.splice(removeIndex, 1);
+          followingprofile.save().then (followingprofile => res.json(followingprofile));
+        })
+        .catch (err=>res.status(404).json(err));
+      });
 
-    // 1) Delete user's profile document from profiles collection in MongoDB
+      // for each follower
+      profile.followers.forEach ( follower => {            
+        // get follower's profile  
+        Profile.findOne({user: follower.user})
+        .then (followerprofile => {
+          // find user in friend's following table
+          const removeIndex1 = followerprofile.followings
+            .map (following => following.user.toString())
+            .indexOf (req.user.id);
+          // remove user in friend's follower table  
+          followerprofile.followings.splice(removeIndex1, 1);
+          followerprofile.save().then (followerprofile => res.json(followerprofile));
+        })
+        .catch (err=>res.status(404).json(err));
+      });
+    })
+    .catch (err=>res.status(404).json(err));
+
+    // 2) Delete user's profile document from profiles collection in MongoDB
     Profile.findOneAndRemove({user: req.user.id})
     .then (profile => {
       profile.remove()
@@ -103,13 +138,13 @@ router.delete(
     })
     .catch (err=>res.status(404).json(err));
 
-    // 2) Delete user's posts documents from posts collection in MongoDB
+    // 3) Delete user's posts documents from posts collection in MongoDB
     Post.deleteMany({ user: req.user.id })
     .then(post => {
       post.remove()
     })
 
-    // 3) Delete user document from users collection in MongoDB
+    // 4) Delete user document from users collection in MongoDB
     User.findOneAndRemove({ _id: req.user.id })
     .then(user => {
       user.remove()
@@ -289,7 +324,7 @@ router.delete(
           // By this state, we don't expect exception
           Profile.findOne({user: req.params.user_id})
           .then (friendprofile => {
-            const removeIndex1 = profile.followers
+            const removeIndex1 = friendprofile.followers
               .map (follower => follower.user.toString())
               .indexOf (req.user.id);
 
