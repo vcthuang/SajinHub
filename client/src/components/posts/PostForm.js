@@ -51,14 +51,11 @@ class PostForm extends Component {
           <div className="row justify-content-center">
             <div className="col-xs-12 col-sm-12 col-md-9 col-lg-7 col-xl-6 align-self-center">
 
-              <br />
-              <br/>
-              <p className="display-4" style={{ textAlign: 'center', fontSize: '30px' }}>Share your post with friends ✨</p>
+              <p className="display-4" style={{ textAlign: 'center', fontSize: '30px', marginTop: '50px'}}>Share your post with friends<span role="img" aria-label="stars">✨</span></p>
               
-              <br />
-              <div className="card h-100 border-0 shadow">
+              <div className="card h-100 border-0 shadow" style={{marginTop: '35px' }}>
                 <div className="card-body" style={{
-                  backgroundColor: '#f9f9f9' }}>
+                  backgroundColor: '#f9f9f9'}}>
                   <div>
                     <br />
                     <form onSubmit={this.onSubmit}>

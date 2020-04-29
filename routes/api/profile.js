@@ -24,6 +24,7 @@ const mongoose = require('mongoose');       // Mongo DB
 const passport = require('passport')        // token authentication
 
 const User = require('../../models/User');  // User model
+const Post = require('../../models/Post');  // User model
 const Profile = require('../../models/Profile');  // User model
 const validateProfileInput = require('../../validations/profile');  // Validation
 // 
@@ -90,20 +91,29 @@ router.delete(
   '/',
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
-    // Delete user from profiles document in MongoDB
+
+    
+
+    // 1) Delete user's profile document from profiles collection in MongoDB
     Profile.findOneAndRemove({user: req.user.id})
-      .then (profile => {
-        // Delete user document only if user profile exists
-        if (profile) {  
-          // Delete user from users document in MongoDB
-          User.findOneAndRemove({_id: req.user.id})
-            .then (()=>res.json({success: true}))
-            .catch (err=>res.status(404).json(err));
-        } else {
-          return res.status(400).json ({noprofile: 'User has no profile'});
-        }
-      })
-      .catch (err=>res.status(404).json(err));
+    .then (profile => {
+      profile.remove()
+        .then(() => res.json({ success: true }))
+        .catch(err => res.json(err));
+    })
+    .catch (err=>res.status(404).json(err));
+
+    // 2) Delete user's posts documents from posts collection in MongoDB
+    Post.deleteMany({ user: req.user.id })
+    .then(post => {
+      post.remove()
+    })
+
+    // 3) Delete user document from users collection in MongoDB
+    User.findOneAndRemove({ _id: req.user.id })
+    .then(user => {
+      user.remove()
+    })
   }
 );
 

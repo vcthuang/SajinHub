@@ -62,22 +62,22 @@ class ProfileHome extends Component {
     const { user } = this.props.auth;
     const profile = this.props.profile.userProfile;
     const { loading } = this.props.profile;
-    //const { posts } = this.props.post;
-    const { userposts } = this.props.post;
+    const { posts } = this.props.post;
+    //const { userposts } = this.props.post;
 
     let profileContent;
 
     // If user has posts, it will be displayed
     let displayPosts = false;
-    //let userPosts = null;
+    let userPosts = null;
     
     if (profile === null || loading) {
       profileContent = <Spinner />
     } else {
       if (Object.keys(profile).length > 0 ) {
         
-        //userPosts = posts.filter (post => post.user === profile.user._id);
-        if (!isEmpty(userposts))
+        userPosts = posts.filter (post => post.user === profile.user._id);
+        if (!isEmpty(userPosts))
           displayPosts = true;
 
         // location
@@ -222,7 +222,7 @@ class ProfileHome extends Component {
             <ProfileFollowers followers = {profile.followers}/>}
           <div className="row">
           {displayPosts &&   
-            <UserPosts posts = {userposts}/>}
+            <UserPosts posts = {userPosts}/>}
           </div>
         </div>
       </div>
